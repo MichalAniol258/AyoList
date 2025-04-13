@@ -1,0 +1,386 @@
+.contentContainer {
+    margin: 0 auto;
+    min-width: 320px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 6rem;
+}
+
+.statsMainGora {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 60px;
+}
+
+.statsMainInfo {
+    color: rgb(124, 137, 154);
+    padding-left: 16px;
+    text-wrap: nowrap;
+}
+
+.statsMainTotal {
+    display: flex;
+    align-items: center;
+    min-width: 140px;
+    text-wrap: nowrap;
+}
+
+
+
+
+
+.headerScore {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    min-height: 46px;
+}
+
+.headerScore h3 {
+    margin: 0;
+    font-size: 1.17em;
+    font-weight: bold;
+
+}
+
+.scoreSwitch {
+    display: inline-flex;
+    align-items: center;
+    background-color: hsla(195, 33%, 10%, 1);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-wrap: nowrap;
+    border-radius: 30px;
+    height: 33px;
+    overflow: hidden;
+    padding: 5px 6px;
+    position: relative;
+}
+
+.optionScore span {
+    color: rgb(124, 137, 154);
+    cursor: pointer;
+}
+
+
+
+.optionScore {
+    border-radius: 30px;
+    padding: 3px 12px;
+    transition: .25s ease;
+}
+
+
+
+.scoreActive {
+    background-color: rgb(20, 184, 166);
+    ;
+}
+
+.scoreActive span {
+    color: hsla(195, 33%, 10%, 1);
+}
+
+
+.statsMainTotal .circle {
+    display: grid;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: hsla(195, 33%, 10%, 1);
+    box-shadow: 0 10px 20px rgba(var(--color-shadow-blue), .07), 0 4px 4px rgba(var(--color-shadow-blue), .03);
+    height: 40px;
+    width: 40px;
+    min-width: 40px;
+}
+
+
+.iconStats {
+    width: auto;
+    height: 1rem;
+    color: rgb(124, 137, 154);
+}
+
+.wynikStats {
+    font-size: 1.3rem;
+    font-weight: 800;
+}
+
+.opisStats {
+    font-size: 0.8rem;
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+.statsBarContainer {
+    background-color: hsla(195, 33%, 10%, 1);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15), 0 4px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: rgb(124, 137, 154);
+    padding-top: 40px;
+    overflow: hidden;
+    margin-bottom: 60px;
+}
+
+
+.statsBarBody {
+    align-items: flex-end;
+    display: flex;
+    overflow: visible;
+    position: relative;
+    width: 100%;
+    height: 140px;
+
+}
+
+.bar-wrap {
+    align-items: flex-end;
+    display: flex;
+    height: 100%;
+    min-width: 40px;
+    max-width: 160px;
+    width: 100%;
+    justify-content: center;
+}
+
+.barStats {
+    background-color: rgb(20, 184, 166);
+    border-radius: 4px 4px 0 0;
+    width: 30%;
+    height: 30%;
+    min-width: 25px;
+    max-width: 40px;
+    transition: height .4s ease-in-out;
+}
+
+.barStats .barValue {
+    text-align: center;
+    margin-top: -22px;
+}
+
+
+/* Styl dla strzałki tooltipa */
+
+
+.statsBarBottom {
+    background-color: hsla(194, 33%, 15%, 0.6);
+    display: inline-flex;
+    overflow: visible;
+    width: 100%;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.statsBarBottom .barLabel {
+    display: inline-block;
+    padding-bottom: 15px;
+    padding-top: 20px;
+    min-width: 40px;
+    max-width: 160px;
+    width: 100%;
+    position: relative;
+    text-align: center;
+
+}
+
+
+.tooltipDiv {
+    font-size: 0.8rem;
+    text-wrap: nowrap;
+
+}
+
+
+
+
+
+.tooltip {
+    color: hsla(194, 33%, 10%, 1);
+    z-index: 1;
+}
+
+/* Początkowy i końcowy stan tooltipa */
+.tooltip-enter {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.26s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.tooltip-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tooltip-exit {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.26s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.tooltip-exit-active {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+
+
+.tooltipTitle {
+    color: rgb(20, 184, 166);
+    border-radius: 7px;
+    font-weight: 700;
+    padding-bottom: 8px;
+}
+
+.tooltipContent {
+    color: rgb(124, 137, 154);
+
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+
+
+.tooltip.visible {
+    opacity: 1;
+}
+
+
+.pie-charts {
+    display: grid;
+    grid-gap: 30px;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin: 80px 0;
+}
+
+.pie-chart {
+    background-color: hsla(194, 33%, 10%, 1);
+    border-radius: 8px;
+    height: 200px;
+    padding: 22px;
+    padding-bottom: 5px;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, .15), 0 4px 4px rgba(0, 0, 0, .05);
+}
+
+.pieTitle {
+    text-transform: capitalize;
+    font-weight: 700;
+    font-size: 1em;
+    color: rgb(124, 137, 154);
+}
+
+.pieWrap {
+    color: white;
+    display: grid;
+    grid-template-columns: 80px auto;
+    grid-gap: 30px;
+    height: 149px;
+    padding-left: 10px;
+    align-items: center;
+}
+
+.pieLabels {
+    display: flex;
+    flex-direction: column;
+}
+
+.pieLabelWrap {
+    border-radius: 6px;
+    color: white;
+    display: grid;
+    font-size: 0.8em;
+    text-wrap: nowrap;
+    font-weight: 700;
+    grid-template-columns: auto 50px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.pieLabel {
+    padding: 6px 10px;
+}
+
+.piePercent {
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+}
+
+
+@media (max-width: 1540px) {
+    .statsMainGora {
+        margin-top: 20px;
+        display: grid;
+        grid-gap: 40px 30px;
+        grid-template-columns: repeat(3, 1fr);
+        margin-left: 5%;
+        width: 90%;
+        margin-bottom: 60px;
+    }
+}
+
+
+@media (max-width: 1040px) {
+    .pie-charts {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 1040px) {
+
+
+    .sMain {
+        display: grid;
+        grid-auto-columns: minmax(125px, 1fr);
+        grid-gap: 25px 20px;
+    }
+
+    .statsMainGora {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .navik {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .statsMainGora {
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 1040px) and (max-width: 1540px) {
+    .contentContainer {
+        max-width: 1140px;
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+}
+
+@media (min-width: 1540px) {
+    .contentContainer {
+        max-width: 1520px;
+        padding-left: 100px;
+        padding-right: 100px;
+    }
+}
+
+@media (max-width: 1040px) {
+
+    .headerScore {
+        display: block;
+    }
+
+    .headerScore h3 {
+        padding-bottom: 10px;
+    }
+}

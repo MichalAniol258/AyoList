@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/header.jsx",
+    "app/scroll.tsx",
+    "app/useScrollRestoration.jsx",
+    "app/Profile/layout.tsx",
+    "app/pages/api/proxy.js",
+    "app/login/login.jsx",
+    "app/api/auth/[...nextauth]/route.ts",
+    "src/app/components/Chart.tsx"
+, "src/app/Profile/pStats.jsx"  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

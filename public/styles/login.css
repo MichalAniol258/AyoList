@@ -1,0 +1,32 @@
+.containerLogin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(225deg, #101a1e, #0a1114 50%, #05090a);
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-shadow: inset 0 0 80px 40px #070c0d;
+}
+
+.buttonChuj {
+    align-items: center;
+    background: #122021;
+    box-shadow: 0 14px 30px #091011, 0 4px 4px rgba(9, 16, 17, .4);
+    border-radius: 4px;
+    color: #7c899a;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    margin-right: 10px;
+    margin-top: 15px;
+    padding: 10px 15px;
+    transition: .2s;
+}
+
+.loginImg {
+    width: auto;
+    height: 36px;
+    margin-right: 5px
+}

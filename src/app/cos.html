@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Styling the banner */
+        .banner {
+            width: 100%;
+            height: 200px;
+            background-color: #8f1525;
+            /* Example banner color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Wrapper for profile image */
+        .profile-wrapper {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #fff;
+            /* Color for the border around the image */
+            padding: 5px;
+            /* Thickness of the border */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            /* Optional shadow */
+        }
+
+        /* Profile picture styling */
+        .profile-picture {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            /* Makes the image circular */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="banner">
+        <div class="profile-wrapper">
+            <img src="profile-picture.jpg" alt="Profile Picture" class="profile-picture">
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,454 @@
+:root {
+    --darker: rgb(94, 107, 124);
+    --normal: rgb(124, 137, 154);
+    --lighter: rgb(149, 164, 185);
+    --red: rgb(239, 68, 68);
+    --green: rgb(34, 197, 94);
+    --orange: rgb(249, 115, 22);
+
+}
+
+.profile p {
+    color: rgb(149, 164, 185);
+    font-size: 1.25rem;
+    position: relative;
+    font-weight: 600;
+}
+
+.sPHeader {
+    color: white;
+
+}
+
+.container1 {
+    width: 100%;
+    height: 100%;
+
+}
+
+.section-header {
+    margin-bottom: 10px;
+    padding-left: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--normal);
+}
+
+.genre-overview {
+    background-color: hsla(195, 33%, 10%, 1);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.genres-overview {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+
+.overview-genre {
+    text-align: center;
+}
+
+.name-overview {
+    background-color: var(--red);
+    border-radius: 4px;
+    color: white;
+    margin-bottom: 8px;
+    padding: 6px 15px;
+}
+
+.amount-overview {
+    color: var(--red);
+}
+
+.label-overview {
+    color: rgba(149, 164, 185, 0.4);
+    font-size: 0.744rem;
+    font-weight: 400;
+}
+
+.percentage-bar-overview {
+    display: flex;
+    flex-grow: 1;
+    line-height: 0;
+}
+
+.percentage-overview {
+    display: inline-block;
+    height: 11px;
+    min-width: 24.2678%;
+    background: var(--red);
+}
+
+.container-overview {
+    margin: 0 auto;
+    min-width: 320px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+}
+
+
+.about-content {
+    max-height: 700px;
+    overflow: hidden;
+    background-color: hsla(195, 33%, 10%, 1);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.markdown {
+    line-height: 1.4;
+    color: var(--lighter);
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5 {
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: .5rem;
+    margin-top: 0;
+}
+
+.markdown h1 {
+    font-size: 1.178rem;
+}
+
+.favourites {
+    margin-top: 30px;
+}
+
+.favourites.preview .favourites-wrap {
+    display: block;
+    margin-bottom: 25px;
+    padding: 20px;
+    padding-bottom: 0;
+    padding-right: 0;
+}
+
+.favourites-wrap {
+    background: hsla(195, 33%, 10%, 1);
+    border-radius: 4px;
+    display: grid;
+    grid-gap: 25px;
+    grid-template-columns: repeat(auto-fill, 85px);
+    justify-content: space-around;
+    margin-bottom: 30px;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.activity-history {
+    display: grid;
+    grid-auto-flow: column dense;
+    grid-gap: 8px 4px;
+    grid-template-rows: repeat(7, 1fr);
+    justify-items: center;
+}
+
+.history-wrap {
+    background-color: hsla(195, 33%, 10%, 1);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-bottom: 25px;
+    padding: 20px;
+}
+
+.history-day {
+    background: rgb(6, 12, 19);
+    border-radius: 3px;
+    display: inline-block;
+    height: 10px;
+    position: relative;
+    width: 10px;
+}
+
+
+
+.circle {
+    align-items: center;
+    border-radius: 50%;
+    font-size: 0.8;
+    font-weight: 700;
+    display: inline-block;
+    height: 10px;
+    margin-right: 2px;
+    width: 10px;
+}
+
+
+.history-day.lv-1,
+.circle.lv-1 {
+    background: #0d9488;
+}
+
+.history-day.lv-3,
+.circle.lv-3 {
+    background: #115e59;
+}
+
+.history-day.lv-4,
+.history-day.lv-5,
+.history-day.lv-6,
+.history-day.lv-7,
+.history-day.lv-8,
+.history-day.lv-9,
+.circle.lv-4,
+.circle.lv-5,
+.circle.lv-6,
+.circle.lv-7,
+.circle.lv-8,
+.circle.lv-9 {
+    background: #2dd4bf;
+}
+
+.favourites.preview .favourites-wrap .favourite,
+.favourites.preview .favourites-wrap>div {
+    margin-bottom: 20px;
+    margin-right: 21px;
+}
+
+.wholeList {
+    margin-top: 20px;
+}
+
+.favourite {
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    background-image: url("https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx120377-GdoVPT4ZVxJn.jpg");
+    display: inline-block;
+    height: 115px;
+    position: relative;
+    width: 85px;
+}
+
+
+
+
+.pNavBar {
+    display: none;
+    margin-top: 7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.socials {
+    margin-top: 6.5rem;
+}
+
+.socials ul {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.socials li {
+    flex: 0;
+    background-color: hsla(195, 33%, 10%, 1);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+}
+
+.socials ul .sociale {
+    display: flex;
+    width: 1.25rem;
+    height: auto;
+    margin-bottom: 0;
+    color: rgb(124, 137, 154);
+}
+
+
+
+
+.pNavBar ul {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.pNavBar li {
+    text-align: center;
+    gap: 2rem;
+    flex: 1;
+}
+
+.pNavBar li p {
+    font-weight: 500;
+    margin: 0.5rem;
+    background: linear-gradient(225deg, hsla(196, 50%, 7%, 1) 0%, hsla(187, 31%, 30%, 1) 50%, hsla(195, 33%, 30%, 1) 100%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.4rem;
+}
+
+.pNavBar li p:last-of-type {
+    margin: 0.5rem;
+    font-weight: 400;
+    color: rgb(114, 138, 161);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-wrap: nowrap;
+    font-size: 1rem;
+}
+
+.pNavBar li:last-of-type {
+    border: none;
+}
+
+.pIcon {
+    width: 100%;
+    display: none;
+    justify-content: end;
+    align-self: center;
+}
+
+
+
+
+.pBaner {
+    height: calc(12em);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: 5px solid hsla(195, 33%, 10%, 1);
+    box-shadow: inset 1rem -1rem 100px 0rem black;
+    background-position: 50% 35% !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    position: relative;
+
+}
+
+.two {
+    margin-top: 12rem;
+    border-radius: 2rem;
+}
+
+
+
+
+@media (min-width: 1024px) {
+    .pBaner {
+        height: 330px;
+    }
+
+    .two {
+        margin-top: calc(12rem + 138px);
+    }
+
+
+
+}
+
+
+
+
+.left {
+    inset: calc(100% - 2em) calc(50% - 5.95em);
+    border-bottom-right-radius: 1.25rem;
+    box-shadow: 0.25em 0.25em 0 0.25em white;
+
+}
+
+.right {
+    inset: calc(100% - 2em) calc(50% + 3.3em);
+    box-shadow: 0.25em 0.25em 0 0.25em white;
+}
+
+.curve {
+    width: 2em;
+    display: none;
+    height: 2em;
+    position: absolute;
+    z-index: 2;
+    /* Zapewnia, że elementy krzywizny będą wyżej niż tło */
+}
+
+.profileImage {
+    width: 6rem;
+    margin-top: 2.25rem;
+    height: auto;
+    margin-bottom: 0.5rem;
+    border-radius: 1.5rem;
+    z-index: 1;
+}
+
+
+
+
+.profile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 7rem;
+    height: 7rem;
+    background: hsla(195, 33%, 10%, 1);
+    /* Adjust height to match width */
+}
+
+.activeP p {
+    color: #14b8a6;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.two::before {
+    inset: calc(100% - 4.75rem) 0 0 -2.25rem;
+    border-bottom-right-radius: 1rem;
+    box-shadow: 0.25em 0.25em 0 0.06em hsla(195, 33%, 10%, 1);
+}
+
+.two::after {
+    inset: calc(100% - 4.75rem) 0 0 7rem;
+    border-bottom-left-radius: 1rem;
+    box-shadow: -0.25em 0.25em 0 0.06em hsla(195, 33%, 10%, 1);
+}
+
+.profile::before,
+.profile::after {
+    position: absolute;
+    content: "";
+    width: 2.25rem;
+    height: 1.25rem;
+    background: transparent;
+}
+
+
+
+.profileIcon {
+    width: 1.5rem;
+    height: auto;
+    color: #213C40;
+}

@@ -1,0 +1,44 @@
+.all2 {
+    margin-top: 0;
+}
+
+.list2 {
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.listOption2 {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.optionActive2 {
+    background-color: hsla(195, 33%, 10%, 1);
+    transition: all 0.3s ease-in-out;
+}
+
+
+.unFocusIcon {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.hovered {
+    color: #14b8a6 !important;
+    cursor: pointer;
+}
+
+.content2 {
+    display: none;
+    color: rgb(149, 164, 185);
+    font-size: 1.25rem;
+    font-weight: 600;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .content2 {
+        display: flex;
+    }
+}

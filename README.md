@@ -28,6 +28,9 @@ This app allows users to:
 
 ![image](https://github.com/user-attachments/assets/07ac7e4f-2eb3-4345-a9b4-965fbeb776c8)
 
+![image](https://github.com/user-attachments/assets/a7dfb9ed-b1b3-43ad-9c0e-c7ba955b3c74)
+
+
 
 ---
 
@@ -48,7 +51,7 @@ cd AyoList
 npm install
 npm run dev
 ```
-## ENV
+## ⚙️ Environment Variables
 ```bash
 ANILIST_CLIENT_ID=anilist_client_id
 ANILIST_CLIENT_SECRET=anilist_client_key

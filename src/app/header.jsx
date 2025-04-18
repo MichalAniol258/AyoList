@@ -5,6 +5,7 @@ import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { usePathname } from "next/navigation";
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation'
 import Link from "next/link";
 import { Tooltip } from "@heroui/react";
 
@@ -160,6 +161,7 @@ const GET_COLLECTION = gql`
 
 export default function Header({ handleChangeFocus }) {
     const router = useRouter();
+
     const [focus, setFocus] = useState(false);
     const [query, setQuery] = useState("");
     const [isVisible, setVisible] = useState(false)
@@ -167,6 +169,10 @@ export default function Header({ handleChangeFocus }) {
     const [showResults, setResults] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const isAdult = false;
+
+    const searchParams = useSearchParams()
+    const search = searchParams.get("search")
+    const type2 = searchParams.get("type")
 
     const [selectedKeys, setSelectedKeys] = useState({
         format: new Set([""]),
@@ -331,7 +337,6 @@ export default function Header({ handleChangeFocus }) {
         variables: {
             page: 1,
             perPage: 20,
-            status: statusSearch,
             type: type,
             countryOfOrigin: !selectedKeys.typeSearch.has("Anime") ? (clearTag > 1 && selectedKeys.typeSearch.has("Manga")
                 ? (countryOfOrigin || undefined) :
@@ -342,10 +347,10 @@ export default function Header({ handleChangeFocus }) {
                     ? (isVisible ? season2 || undefined : season)
                     : undefined)
                 : undefined, seasonYear: !pathname.includes("/Browse/alltimeAll")
-                    ? (selectedKeys.typeSearch.has("Anime")
-                        ? (isVisible ? year || undefined : seasonYear)
-                        : undefined)
-                    : undefined, isAdult, sort: sortArray === "" ? sorter : sortArray, format: format || undefined, genreIn: genres.length > 0 ? genres : undefined
+                ? (selectedKeys.typeSearch.has("Anime")
+                    ? (isVisible ? year || undefined : seasonYear)
+                    : undefined)
+                : undefined, isAdult, sort: sortArray === "" ? sorter : sortArray, format: format || undefined, genreIn: genres.length > 0 ? genres : undefined
         }
     });
 
@@ -871,6 +876,25 @@ export default function Header({ handleChangeFocus }) {
 
     console.log(clearTag)
 
+    useEffect(() => {
+
+        if (search || type2) {
+            setSelectedKeys(prevState => {
+                const updatedState = {
+                    ...prevState,
+                    typeSearch: new Set([type2]),
+
+                };
+                setQuery(search)
+                updateVisibility(updatedState)
+                return updatedState
+            })
+
+            handleFocus(true)
+            handleToggleChange("toggle", !isToggle.toggle)
+        }
+    }, [search, type2]);
+
 
     useEffect(() => {
         if (pathname === "/Browse/upcomingAll") {
@@ -904,6 +928,8 @@ export default function Header({ handleChangeFocus }) {
             handleToggleChange("toggle", !isToggle.toggle)
 
         }
+
+
 
 
         if (pathname === "/Browse/seasonalAll") {
@@ -1267,7 +1293,7 @@ export default function Header({ handleChangeFocus }) {
                                 preserveAspectRatio="xMidYMid meet" className={`arrowRight`}>
 
                                 <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-                                    fill="currentColor" stroke="none">
+                                   fill="currentColor" stroke="none">
                                     <path d="M2058 4727 c-31 -13 -74 -38 -95 -55 -77 -62 -1882 -1878 -1907
 -1920 -38 -61 -60 -154 -52 -225 14 -132 -40 -73 1014 -1129 795 -796 975
 -971 1020 -994 78 -39 202 -46 285 -14 89 34 153 90 191 169 28 60 31 75 31
@@ -1314,17 +1340,17 @@ export default function Header({ handleChangeFocus }) {
                             </svg>
                             <div className="filterSearchIcon">
                                 <motion.svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-                                    width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
-                                    preserveAspectRatio="xMidYMid meet" className={`filterIcon2 ${isToggle.toggle ? 'kolorek5' : 'kolorek25'}`}
-                                    animate={focus ? "show" : "hid"}
-                                    initial={focus}
-                                    transition={{ duration: 0.2 }}
-                                    variants={variants}
-                                    onClick={() => handleToggleChange("toggle", !isToggle.toggle)}
+                                            width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
+                                            preserveAspectRatio="xMidYMid meet" className={`filterIcon2 ${isToggle.toggle ? 'kolorek5' : 'kolorek25'}`}
+                                            animate={focus ? "show" : "hid"}
+                                            initial={focus}
+                                            transition={{ duration: 0.2 }}
+                                            variants={variants}
+                                            onClick={() => handleToggleChange("toggle", !isToggle.toggle)}
                                 >
 
                                     <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-                                        fill="currentColor" stroke="none">
+                                       fill="currentColor" stroke="none">
                                         <path d="M1245 4409 c-278 -35 -443 -171 -517 -426 -21 -71 -23 -99 -23 -303
 0 -205 2 -232 23 -305 66 -227 206 -361 432 -412 107 -24 444 -24 550 0 177
 40 317 142 385 281 45 93 63 164 77 314 12 136 1 319 -28 427 -39 148 -138
@@ -1363,12 +1389,12 @@ export default function Header({ handleChangeFocus }) {
 
                             </DropdownTrigger>
                             <DropdownMenu aria-label="Static Actions"
-                                disallowEmptySelection={true}
-                                variant="flat"
-                                closeOnSelect={false}
-                                className="menuDropdown xdd"
-                                selectionMode="single"
-                                selectedKeys={selectedKeys.typeSearch} onSelectionChange={(keys) => handleSelectionChange("typeSearch", keys)} >
+                                          disallowEmptySelection={true}
+                                          variant="flat"
+                                          closeOnSelect={false}
+                                          className="menuDropdown xdd"
+                                          selectionMode="single"
+                                          selectedKeys={selectedKeys.typeSearch} onSelectionChange={(keys) => handleSelectionChange("typeSearch", keys)} >
                                 {typeSearchTab.map((item) => {
                                     return (
                                         <DropdownItem className="dropDownItem" textValue={item} key={item.key}>{item.name}</DropdownItem>
@@ -1386,7 +1412,7 @@ export default function Header({ handleChangeFocus }) {
                             <div className="search-wrap2">
                                 <svg data-v-84c4e64c="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="ikonka chujec"><path data-v-84c4e64c="" className="ikonka" fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>
                                 <input value={query}
-                                    onChange={handleChange} type="search" placeholder="Search" autoComplete="off" className="filterSearch" />
+                                       onChange={handleChange} type="search" placeholder="Search" autoComplete="off" className="filterSearch" />
                                 <svg onClick={() => setQueryClear()} data-v-17620a08="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" className="ikonkaX ikonkaFilter"><path data-v-17620a08="" fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>
                             </div>
                         </div>
@@ -1422,12 +1448,12 @@ export default function Header({ handleChangeFocus }) {
                             }}>error {errorGenres.message}</p>}
 
                             <DropdownMenu className="menuDropdown" aria-label="Single selection example"
-                                variant="flat"
-                                disallowEmptySelection={false}
-                                closeOnSelect={false}
-                                selectionMode="multiple"
-                                selectedKeys={selectedKeys.genres}
-                                onSelectionChange={(keys) => handleSelectionChange("genres", keys)}
+                                          variant="flat"
+                                          disallowEmptySelection={false}
+                                          closeOnSelect={false}
+                                          selectionMode="multiple"
+                                          selectedKeys={selectedKeys.genres}
+                                          onSelectionChange={(keys) => handleSelectionChange("genres", keys)}
                             >
 
                                 {dataGenres?.GenreCollection.map((item) => {
@@ -1461,13 +1487,13 @@ export default function Header({ handleChangeFocus }) {
 
                             </div>
                             <DropdownMenu aria-label="Single selection example"
-                                variant="flat"
-                                className="menuDropdown"
-                                disallowEmptySelection={false}
-                                closeOnSelect={false}
-                                selectionMode="single"
-                                selectedKeys={selectedKeys.year}
-                                onSelectionChange={(keys) => handleSelectionChange("year", keys)}
+                                          variant="flat"
+                                          className="menuDropdown"
+                                          disallowEmptySelection={false}
+                                          closeOnSelect={false}
+                                          selectionMode="single"
+                                          selectedKeys={selectedKeys.year}
+                                          onSelectionChange={(keys) => handleSelectionChange("year", keys)}
                             >
                                 {years.map((item) => {
                                     return (
@@ -1502,13 +1528,13 @@ export default function Header({ handleChangeFocus }) {
                             </div>
 
                             <DropdownMenu aria-label="Single selection example"
-                                variant="flat"
-                                className="menuDropdown"
-                                disallowEmptySelection={false}
-                                closeOnSelect={false}
-                                selectionMode="single"
-                                selectedKeys={selectedKeys.country}
-                                onSelectionChange={(keys) => handleSelectionChange("country", keys)}
+                                          variant="flat"
+                                          className="menuDropdown"
+                                          disallowEmptySelection={false}
+                                          closeOnSelect={false}
+                                          selectionMode="single"
+                                          selectedKeys={selectedKeys.country}
+                                          onSelectionChange={(keys) => handleSelectionChange("country", keys)}
                             >
                                 {CountryOfOriginTab.map((item) => {
                                     return (
@@ -1542,13 +1568,13 @@ export default function Header({ handleChangeFocus }) {
 
                             </div>
                             <DropdownMenu aria-label="Single selection example"
-                                variant="flat"
-                                className="menuDropdown"
-                                disallowEmptySelection={false}
-                                closeOnSelect={false}
-                                selectionMode="single"
-                                selectedKeys={selectedKeys.status}
-                                onSelectionChange={(keys) => handleSelectionChange("status", keys)}
+                                          variant="flat"
+                                          className="menuDropdown"
+                                          disallowEmptySelection={false}
+                                          closeOnSelect={false}
+                                          selectionMode="single"
+                                          selectedKeys={selectedKeys.status}
+                                          onSelectionChange={(keys) => handleSelectionChange("status", keys)}
                             >
                                 {statusTab.map((item) => {
                                     return (
@@ -1581,14 +1607,14 @@ export default function Header({ handleChangeFocus }) {
 
                             </div>
                             <DropdownMenu aria-label="Single selection example"
-                                variant="flat"
-                                className="menuDropdown"
-                                disallowEmptySelection={false}
-                                closeOnSelect={false}
-                                selectionMode="single"
-                                selectedKeys={selectedKeys.season}
+                                          variant="flat"
+                                          className="menuDropdown"
+                                          disallowEmptySelection={false}
+                                          closeOnSelect={false}
+                                          selectionMode="single"
+                                          selectedKeys={selectedKeys.season}
 
-                                onSelectionChange={(keys) => handleSelectionChange("season", keys)}
+                                          onSelectionChange={(keys) => handleSelectionChange("season", keys)}
                             >
                                 {SeasonTab.map((item) => {
                                     return (
@@ -1624,13 +1650,13 @@ export default function Header({ handleChangeFocus }) {
 
                             </div>
                             <DropdownMenu aria-label="Single selection example"
-                                variant="flat"
-                                className="menuDropdown"
-                                disallowEmptySelection={false}
-                                closeOnSelect={false}
-                                selectionMode="single"
-                                selectedKeys={selectedKeys.format}
-                                onSelectionChange={(keys) => handleSelectionChange("format", keys)}
+                                          variant="flat"
+                                          className="menuDropdown"
+                                          disallowEmptySelection={false}
+                                          closeOnSelect={false}
+                                          selectionMode="single"
+                                          selectedKeys={selectedKeys.format}
+                                          onSelectionChange={(keys) => handleSelectionChange("format", keys)}
                             >
                                 {(selectedKeys.typeSearch.has("Manga") ? mangaFormat : formatTab).map((item) => {
                                     return (
@@ -1694,13 +1720,13 @@ export default function Header({ handleChangeFocus }) {
                                 </div>
                             </DropdownTrigger>
                             <DropdownMenu aria-label="Single selection example"
-                                variant="flat"
-                                className="menuDropdown"
-                                disallowEmptySelection={false}
-                                closeOnSelect={false}
-                                selectionMode="single"
-                                selectedKeys={selectedKeys.sort}
-                                onSelectionChange={(keys) => handleSelectionChange("sort", keys)}
+                                          variant="flat"
+                                          className="menuDropdown"
+                                          disallowEmptySelection={false}
+                                          closeOnSelect={false}
+                                          selectionMode="single"
+                                          selectedKeys={selectedKeys.sort}
+                                          onSelectionChange={(keys) => handleSelectionChange("sort", keys)}
                             >
                                 {sortTab.map((item) => {
                                     return (
@@ -1728,10 +1754,10 @@ export default function Header({ handleChangeFocus }) {
 
                     {/* Header Text */}
                     <motion.div className={`headerText ${focus && !pathname.includes("/Browse") ? "containerHidden" : ""}`}
-                        variants={variants}
-                        initial={false}
-                        animate={focus || pathname.includes("/Browse") ? "hidSection" : "showSection"}
-                        transition={{ duration: 0 }}>
+                                variants={variants}
+                                initial={false}
+                                animate={focus || pathname.includes("/Browse") ? "hidSection" : "showSection"}
+                                transition={{ duration: 0 }}>
                         <h2>
                             What you are
                             <br />
@@ -1747,10 +1773,10 @@ export default function Header({ handleChangeFocus }) {
 
             {showResults && query && data?.Page?.media?.length > 0 && (
                 <motion.section className={`sMain ${focus ? "cos123" : ""}`}
-                    animate={focus || pathname.includes("/Browse") ? "showSection" : "hidSection"}
-                    initial={false}
-                    variants={variants}
-                    transition={{ duration: 0 }}
+                                animate={focus || pathname.includes("/Browse") ? "showSection" : "hidSection"}
+                                initial={false}
+                                variants={variants}
+                                transition={{ duration: 0 }}
                 >
                     <main className={` ${pathname.includes("/Browse") ? "mainBrowse" : ""}`}>
 
@@ -1762,11 +1788,11 @@ export default function Header({ handleChangeFocus }) {
                             < a href="">
                                 {!isVisible && <p>View All</p>}
                                 {!isVisible && <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-                                    width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
-                                    preserveAspectRatio="xMidYMid meet" className="arrow" >
+                                                    width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
+                                                    preserveAspectRatio="xMidYMid meet" className="arrow" >
 
                                     <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-                                        fill="currentColor" className="arrow" stroke="none">
+                                       fill="currentColor" className="arrow" stroke="none">
                                         <path d="M1400 5098 c-44 -17 -77 -44 -171 -137 -144 -143 -163 -177 -164
 -286 0 -58 5 -91 19 -120 13 -27 333 -355 995 -1018 l976 -977 -977 -978
 c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
@@ -1819,16 +1845,15 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
                                         }}
                                     >
                                         <div className="media-card" color="secondary">
-                                            <a className="resultCover" href="">
-                                                <img
-                                                    className="resultImg"
-                                                    src={item.coverImage.extraLarge}
-                                                    alt={item.title.romaji}
-                                                />
-                                            </a>
-                                            <a href="" className="resultTitle">
-                                                <div className="resultCircle">{item.title?.english === null ? item.title?.romaji : item.title?.english}</div>
-                                            </a>
+                                            <Link className="resultCover" href={`${typePath}${item.id}`}>
+                                                <img className="resultImg" src={item.coverImage.extraLarge} alt={item.title.romaji} />
+                                            </Link>
+
+                                            <Link href={`${typePath}${item.id}`} className="resultTitle">
+                                                <div className="resultCircle">
+                                                    {item.title?.english === null ? item.title?.romaji : item.title?.english}
+                                                </div>
+                                            </Link>
                                         </div>
                                     </Tooltip>
                                 );
@@ -1851,15 +1876,15 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
 
 
             <motion.section className={`sMain  ${focus && !pathname.includes("/Browse") ? "cos123" : ""}`}
-                animate={focus && !pathname.includes("/Browse/") && !isVisible || pathname.includes("/Browse") && !pathname.includes("/Browse/") && !isVisible ? "showSection" : "hidSection"}
-                initial={false}
-                variants={variants}
-                transition={{ duration: 0 }}
+                            animate={focus && !pathname.includes("/Browse/") && !isVisible || pathname.includes("/Browse") && !pathname.includes("/Browse/") && !isVisible ? "showSection" : "hidSection"}
+                            initial={false}
+                            variants={variants}
+                            transition={{ duration: 0 }}
             >
                 <motion.main className={` ${pathname.includes("/Browse") ? "mainBrowse" : ""}`} initial={false}
-                    variants={variants}
-                    animate={showResults ? "hid" : ""}
-                    transition={{ duration: 0.3 }}>
+                             variants={variants}
+                             animate={showResults ? "hid" : ""}
+                             transition={{ duration: 0.3 }}>
 
 
                     <div className="showAll">
@@ -1933,15 +1958,15 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
             </motion.section >
 
             <motion.section className={`sMain ${focus && !pathname.includes("/Browse") ? "cos123" : ""} `}
-                animate={focus || pathname.includes("/Browse") ? "showSection" : "hidSection"}
-                initial={false}
-                variants={variants}
-                transition={{ duration: 0 }}
+                            animate={focus || pathname.includes("/Browse") ? "showSection" : "hidSection"}
+                            initial={false}
+                            variants={variants}
+                            transition={{ duration: 0 }}
             >
                 <motion.main className={` ${pathname.includes("/Browse") ? "mainBrowse" : ""}`} initial={false}
-                    variants={variants}
-                    animate={showResults ? "hid" : ""}
-                    transition={{ duration: 0.3 }}>
+                             variants={variants}
+                             animate={showResults ? "hid" : ""}
+                             transition={{ duration: 0.3 }}>
 
                     <div className="showAll">
 
@@ -2109,15 +2134,15 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
 
             {
                 selectedKeys.typeSearch.has("Anime") && <motion.section className={`sMain ${focus && !pathname.includes("/Browse") ? "cos123" : ""} `}
-                    animate={focus && !pathname.includes("/Browse/") && !isVisible || pathname.includes("/Browse") && !pathname.includes("/Browse/") && !isVisible ? "showSection" : "hidSection"}
-                    initial={false}
-                    variants={variants}
-                    transition={{ duration: 0 }}
+                                                                        animate={focus && !pathname.includes("/Browse/") && !isVisible || pathname.includes("/Browse") && !pathname.includes("/Browse/") && !isVisible ? "showSection" : "hidSection"}
+                                                                        initial={false}
+                                                                        variants={variants}
+                                                                        transition={{ duration: 0 }}
                 >
                     <motion.main className={` ${pathname.includes("/Browse") ? "mainBrowse" : ""}`} initial={false}
-                        variants={variants}
-                        animate={showResults ? "hid" : ""}
-                        transition={{ duration: 0.3 }}>
+                                 variants={variants}
+                                 animate={showResults ? "hid" : ""}
+                                 transition={{ duration: 0.3 }}>
 
                         <div className="showAll">
                             <h2><span>Up</span>coming</h2>
@@ -2191,15 +2216,15 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
 
 
             <motion.section className={`sMain ${focus && !pathname.includes("/Browse") ? "cos123" : ""}  `}
-                animate={focus && !pathname.includes("/Browse/") && !isVisible || pathname.includes("/Browse") && !pathname.includes("/Browse/") && !isVisible ? "showSection" : "hidSection"}
-                initial={false}
-                variants={variants}
-                transition={{ duration: 0 }}
+                            animate={focus && !pathname.includes("/Browse/") && !isVisible || pathname.includes("/Browse") && !pathname.includes("/Browse/") && !isVisible ? "showSection" : "hidSection"}
+                            initial={false}
+                            variants={variants}
+                            transition={{ duration: 0 }}
             >
                 <motion.main className={` ${pathname.includes("/Browse") ? "mainBrowse" : ""}`} initial={false}
-                    variants={variants}
-                    animate={showResults ? "hid" : ""}
-                    transition={{ duration: 0.3 }}>
+                             variants={variants}
+                             animate={showResults ? "hid" : ""}
+                             transition={{ duration: 0.3 }}>
 
                     <div className="showAll">
                         <h2><span>ALL TIME</span> POPULAR</h2>

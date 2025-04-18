@@ -3,9 +3,9 @@
 import { motion } from "framer-motion"
 import Link from "next/link.js"
 import { usePathname } from "next/navigation.js"
-import { createContext, useContext, useState } from "react"
+import {  useState } from "react"
 import { gql, useQuery } from "@apollo/client"
-
+import {LayoutContext} from "@/src/app/components/context";
 import { useUser } from "../../components/userInfoWrapper";
 const STATS_LIST = gql`
 query User($userId: Int, $sort: [UserStatisticsSort], $releaseYearsSort2: [UserStatisticsSort]) {
@@ -180,61 +180,8 @@ query Query($userId: Int, $type: MediaType) {
     }
   }
 }`
-interface Genre {
-  genre: string;
-  minutesWatched: number;
-  meanScore: number;
-  count: number;
-}
 
-interface Anime {
-  genres: Genre[];
-}
 
-interface Manga {
-  genres: Genre[];
-}
-
-interface Statistics {
-  statistics: { anime: Anime; manga: Manga };
-}
-
-interface media {
-  coverImage: { extraLarge: string }
-  type: string
-  genres: string
-}
-interface entries {
-  media: media
-}
-
-interface lists {
-  entries: entries[]
-}
-
-interface MediaListCollection {
-  lists: lists[]; // Zmienione na tablicę
-}
-interface User {
-  User: Statistics;
-  MediaListCollection: MediaListCollection;
-}
-interface LayoutContextProps {
-  statsData: User;
-  statsLoading: boolean
-  mediaData: User;
-  mediaLoading: boolean
-}
-
-export const LayoutContext = createContext<LayoutContextProps | null>(null);
-
-export const useLayoutContext = () => {
-  const context = useContext(LayoutContext);
-  if (!context) {
-    throw new Error("kurwa")
-  }
-  return context;
-}
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { userInfo } = useUser();

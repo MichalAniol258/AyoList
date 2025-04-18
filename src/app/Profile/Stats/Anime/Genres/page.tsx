@@ -1,6 +1,7 @@
 "use client"
-import StatsGenres from "../../../pStatsGenres"
-import { useLayoutContext } from "../../layout";
+import StatsGenres from "../../../pStatsGenres";
+import {useLayoutContext} from "@/src/app/components/context";
+
 export default function StatsOverview() {
     const { statsData, statsLoading, mediaData, mediaLoading } = useLayoutContext()
 

@@ -1,6 +1,6 @@
 "use client"
 import PStats from "../../../pStats.jsx"
-import { useLayoutContext } from "../../layout";
+import {useLayoutContext} from "@/src/app/components/context";
 export default function StatsOverview() {
     const { statsData, statsLoading } = useLayoutContext();
 

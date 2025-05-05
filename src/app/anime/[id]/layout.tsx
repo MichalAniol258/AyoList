@@ -1205,7 +1205,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
                     return (
                       <div key={index} className={`media-preview-card ${isClass && 'Small'}`}>
-                        <Link className="coverRelations" href={`${item.id}`} style={{
+                        <Link className="coverRelations" href={`${typeMedia}${item.id}`} style={{
                           backgroundImage: `url('${item.coverImage?.extraLarge}')`
                         }}>
                           <div className="image-text">
@@ -1216,7 +1216,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
                           <div className="infoHeader">
                             <div>{formattedRelation}</div>
                           </div>
-                          <Link href={`${typeMedia}${edge.id}`} className="relationTitle">{item.title?.english || item.title?.romaji || ""}</Link>
+                          <Link href={`${typeMedia}${item.id}`} className="relationTitle">{item.title?.english || item.title?.romaji || ""}</Link>
                           <div className="relationInfo">{formattedFormat} · {formattedStatus}</div>
                         </div>
                       </div>

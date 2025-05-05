@@ -716,7 +716,7 @@ export default function EditComponent({ editData, isEditOpen, setIsEditOpen, set
                                 </div>
 
 
-                                {pathname.includes('/manga/') && <><div className="form repeat">
+                                {pathname.includes('/manga/') && <><div className="form repeat2">
                                     <div className="input-title">Total Rereads</div>
                                     <div className="el-input-number is-controls-right">
                                         <span className="el-input-number__decrease" onClick={() => handleDecrease('repeat', 0)}>
@@ -726,7 +726,7 @@ export default function EditComponent({ editData, isEditOpen, setIsEditOpen, set
                                             <i className="el-icon-arrow-up"></i>
                                         </span>
                                         <div className="el-input">
-                                            <input type="text" value={editData.repeat} onChange={(e) => {
+                                            <input type="number" value={editData.repeat} onChange={(e) => {
                                                 let value = Number(e.target.value);
                                                 if (value < 0 || isNaN(value)) value = 0;
                                                 setEditData(prev => ({ ...prev, repeat: value }));
@@ -870,7 +870,7 @@ export default function EditComponent({ editData, isEditOpen, setIsEditOpen, set
 
 
 
-                                {pathname.includes('/anime/') && <div className="form repeat">
+                                {pathname.includes('/anime/') && <div className="form repeat2">
                                     <div className="input-title">Total Rewatches</div>
                                     <div className="el-input-number is-controls-right">
                                         <span className="el-input-number__decrease" onClick={() => handleDecrease('repeat', 0)}>
@@ -880,7 +880,7 @@ export default function EditComponent({ editData, isEditOpen, setIsEditOpen, set
                                             <i className="el-icon-arrow-up"></i>
                                         </span>
                                         <div className="el-input">
-                                            <input type="text" value={editData.repeat} onChange={(e) => {
+                                            <input type="number" value={editData.repeat} onChange={(e) => {
                                                 let value = Number(e.target.value);
                                                 if (value < 0 || isNaN(value)) value = 0;
                                                 setEditData(prev => ({ ...prev, repeat: value }));

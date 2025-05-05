@@ -1028,8 +1028,38 @@ export default function PAnimeListMain() {
                                             <i className="el-icon-arrow-up"></i>
                                         </span>
                                         <div className="el-input">
-                                            <input type="text" value={editData.score}
-                                                onChange={(e) => setEditData(prev => ({ ...prev, score: e.target.value }))} autoComplete="off" max="10" min="0" className="el-input__inner" role="spinbutton" aria-valuemax="10" aria-valuemin="0" aria-valuenow="9" aria-disabled="undefined" />
+                                            <input
+                                                type="number"
+                                                value={editData.score !== '' ? editData.score : ''}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+
+                                                    // Pozwól na pustą wartość (np. usuwanie)
+                                                    if (value === '') {
+                                                        setEditData(prev => ({ ...prev, score: '' }));
+                                                        return;
+                                                    }
+
+                                                    let numValue = Number(value);
+
+                                                    if (isNaN(numValue) || numValue < 0) {
+                                                        numValue = 0;
+                                                    } else if (numValue > 10) {
+                                                        numValue = 10;
+                                                    }
+
+                                                    setEditData(prev => ({ ...prev, score: numValue }));
+                                                }}
+                                                autoComplete="off"
+                                                max="10"
+                                                min="0"
+                                                className="el-input__inner"
+                                                role="spinbutton"
+                                                aria-valuemax="10"
+                                                aria-valuemin="0"
+                                                aria-valuenow={typeof editData.score === 'number' ? editData.score : 0}
+                                                aria-disabled="false"
+                                            />
                                         </div>
                                     </div>
                                 </div>

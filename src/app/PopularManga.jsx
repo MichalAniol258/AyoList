@@ -281,11 +281,17 @@ export default function PopularManga() {
                                             <img className="resultImg" src={item.coverImage.extraLarge} alt={item.title.romaji} />
                                         </Link>
 
-                                        <Link href={`/manga/${item.id}`} className="resultTitle">
+                                        <Link href={`/anime/${item.id}`} className="resultTitle min-h-[46px]">
                                             <div className="resultCircle">
                                                 {item.title?.english === null ? item.title?.romaji : item.title?.english}
+
                                             </div>
+
                                         </Link>
+                                        <div className="flex justify-start items-center gap-1">
+                                            <img src="/images/star.svg" className="star" alt="" />
+                                            {item.meanScore !== null && <span className="text-[0.8rem]">{item.meanScore}{item.meanScore !== null && "%"}</span>}
+                                        </div>
                                     </motion.div>
                                 </Tooltip>
                             )

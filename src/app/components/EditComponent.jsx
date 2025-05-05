@@ -537,9 +537,40 @@ export default function EditComponent({ editData, isEditOpen, setIsEditOpen, set
                                             <i className="el-icon-arrow-up"></i>
                                         </span>
                                         <div className="el-input">
-                                            <input type="text" value={editData.score}
-                                                onChange={(e) => setEditData(prev => ({ ...prev, score: e.target.value }))} autoComplete="off" max="10" min="0" className="el-input__inner" role="spinbutton" aria-valuemax="10" aria-valuemin="0" aria-valuenow="9" aria-disabled="undefined" />
+                                            <input
+                                                type="number"
+                                                value={editData.score !== '' ? editData.score : ''}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+
+                                                    // Pozwól na pustą wartość (np. usuwanie)
+                                                    if (value === '') {
+                                                        setEditData(prev => ({ ...prev, score: '' }));
+                                                        return;
+                                                    }
+
+                                                    let numValue = Number(value);
+
+                                                    if (isNaN(numValue) || numValue < 0) {
+                                                        numValue = 0;
+                                                    } else if (numValue > 10) {
+                                                        numValue = 10;
+                                                    }
+
+                                                    setEditData(prev => ({ ...prev, score: numValue }));
+                                                }}
+                                                autoComplete="off"
+                                                max="10"
+                                                min="0"
+                                                className="el-input__inner"
+                                                role="spinbutton"
+                                                aria-valuemax="10"
+                                                aria-valuemin="0"
+                                                aria-valuenow={typeof editData.score === 'number' ? editData.score : 0}
+                                                aria-disabled="false"
+                                            />
                                         </div>
+
                                     </div>
                                 </div>
 
@@ -549,21 +580,47 @@ export default function EditComponent({ editData, isEditOpen, setIsEditOpen, set
                                         <span className="el-input-number__decrease" onClick={() => handleDecrease('progress', 0)}>
                                             <i className="el-icon-arrow-down"></i>
                                         </span>
-                                        <span className="el-input-number__increase" onClick={() => handleIncrease('progress', editData.episodes === 0 ? Infinity : editData.episodes)}>
+                                        <span className="el-input-number__increase" onClick={() => handleIncrease('progress', editData.episodes || Infinity)}>
                                             <i className="el-icon-arrow-up"></i>
                                         </span>
                                         <div className="el-input">
-                                            <input type="text" value={`${editData.progress}`}
+                                            <input
+                                                type="number"
+                                                value={editData.progress !== '' ? editData.progress : ''}
                                                 onChange={(e) => {
-                                                    let value = Number(e.target.value);
-                                                    const maxLimit = editData.episodes === 0 ? Infinity : editData.episodes;
+                                                    let value = e.target.value;
 
-                                                    if (value > maxLimit) value = maxLimit;
-                                                    if (value < 0 || isNaN(value)) value = 0;
+                                                    // Pozwól na pustą wartość, aby użytkownik mógł usuwać wpis
+                                                    if (value === '') {
+                                                        setEditData(prev => ({ ...prev, progress: '' }));
+                                                        return;
+                                                    }
 
-                                                    setEditData(prev => ({ ...prev, progress: value }));
-                                                }} autoComplete="off" max={'10'} min="0" className="el-input__inner" role="spinbutton" aria-valuemax={'10'} aria-valuemin="0" aria-valuenow="0" aria-disabled="false" />
+                                                    let numValue = Number(value);
+                                                    const maxLimit = editData.episodes ?? Infinity;
+
+                                                    if (isNaN(numValue) || numValue < 0) {
+                                                        numValue = 0;
+                                                    }
+
+                                                    if (numValue > maxLimit) {
+                                                        numValue = maxLimit;
+                                                    }
+
+                                                    setEditData(prev => ({ ...prev, progress: numValue }));
+                                                }}
+                                                autoComplete="off"
+                                                max={editData.episodes ?? undefined}
+                                                min="0"
+                                                className="el-input__inner"
+                                                role="spinbutton"
+                                                aria-valuemax={editData.episodes ?? undefined}
+                                                aria-valuemin="0"
+                                                aria-valuenow={typeof editData.progress === 'number' ? editData.progress : 0}
+                                                aria-disabled="false"
+                                            />
                                         </div>
+
                                     </div>
                                 </div>
 
@@ -689,17 +746,42 @@ export default function EditComponent({ editData, isEditOpen, setIsEditOpen, set
                                                 <i className="el-icon-arrow-up"></i>
                                             </span>
                                             <div className="el-input">
-                                                <input type="text" value={`${editData.volumes}`}
+                                                <input
+                                                    type="number"
+                                                    value={editData.volumes !== '' ? editData.volumes : ''}
                                                     onChange={(e) => {
-                                                        let value = Number(e.target.value);
-                                                        const maxLimit = editData.volumesCount === 0 ? Infinity : editData.volumesCount;
+                                                        let value = e.target.value;
 
-                                                        if (value > maxLimit) value = maxLimit;
-                                                        if (value < 0 || isNaN(value)) value = 0;
+                                                        if (value === '') {
+                                                            setEditData(prev => ({ ...prev, volumes: '' }));
+                                                            return;
+                                                        }
 
-                                                        setEditData(prev => ({ ...prev, volumes: value }));
-                                                    }} autoComplete="off" max={'10'} min="0" className="el-input__inner" role="spinbutton" aria-valuemax={'10'} aria-valuemin="0" aria-valuenow="0" aria-disabled="false" />
+                                                        let numValue = Number(value);
+                                                        const maxLimit = editData.volumesCount ?? 10;
+
+                                                        if (isNaN(numValue) || numValue < 0) {
+                                                            numValue = 0;
+                                                        }
+
+                                                        if (numValue > maxLimit) {
+                                                            numValue = maxLimit;
+                                                        }
+
+                                                        setEditData(prev => ({ ...prev, volumes: numValue }));
+                                                    }}
+                                                    autoComplete="off"
+                                                    max={editData.volumesCount ?? 10}
+                                                    min="0"
+                                                    className="el-input__inner"
+                                                    role="spinbutton"
+                                                    aria-valuemax={editData.volumesCount ?? 10}
+                                                    aria-valuemin="0"
+                                                    aria-valuenow={typeof editData.volumes === 'number' ? editData.volumes : 0}
+                                                    aria-disabled="false"
+                                                />
                                             </div>
+
                                         </div>
                                     </div></>}
 

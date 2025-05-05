@@ -130,7 +130,7 @@ export default function Emission() {
                                             <div className="chuj3">
 
                                                 {item.meanScore && <><img src="/images/star.svg" className="star" alt="" />
-                                                    <p className="chuj25">{item.meanScore}</p></>}
+                                                    <span className="chuj25">{item.meanScore}%</span></>}
                                                 <p className="chuj25">Ep</p><span className="krzywychuj">{item.nextAiringEpisode?.episode}</span>
                                             </div>
 

@@ -111,7 +111,7 @@ mutation Mutation($animeId: Int, $mangaId: Int) {
 }
 `;
 
-export default function MediaPage({ mediaId }) {
+export default function MediaPage({ mediaId, setLoadedMedia }) {
     const { userList, userListManga, GET_MEDIA_PROVIDER } = useUserContext();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -160,6 +160,9 @@ export default function MediaPage({ mediaId }) {
 
     const { loading, error, data } = useQuery(GET_ANIME_DETAILS, {
         variables: { mediaId: parseInt(mediaId) },
+        onCompleted: () => {
+            setLoadedMedia(true);
+        }
     });
 
     if (loading) return <p>Loading...</p>;

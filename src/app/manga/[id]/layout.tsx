@@ -487,6 +487,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
   const [isLoading, setLoading] = useState(false);
   const [isLoading2, setLoading2] = useState(false);
+  const [mediaLoaded, setMediaLoaded] = useState(false);
   const [isLoading3, setLoading3] = useState(false);
   const [isSpoiler, setSpoiler] = useState(false);
   const [isToggle, setToggle] = useState(false);
@@ -792,7 +793,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
 
 
-  if (userLoading || userLoading2 || userLoading3) {
+  if (userLoading || userLoading2 || userLoading3 || mediaLoaded) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="w-1 flex justify-center items-center">
@@ -985,7 +986,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
   return (
     <>
       <NavPc />
-      <MediaPage mediaId={id} />
+      <MediaPage mediaId={id} setLoadedMedia={() => setMediaLoaded(mediaLoaded)} />
       <div className="contentContainer content-layout">
         <div className="sidebar">
           {media.rankings?.length > 0 && <div className="rankings">

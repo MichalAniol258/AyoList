@@ -2,7 +2,7 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { useUserContext } from '../../components/userListWrapper'
 import EditComponent from '../../components/EditComponent'
 import { useUser } from "../../components/userInfoWrapper";
@@ -113,7 +113,7 @@ mutation Mutation($animeId: Int, $mangaId: Int) {
 }
 `;
 
-export default function MediaPage({ mediaId }) {
+export default function MediaPage({ mediaId, setLoadingDone  }) {
     const { userList, userListManga, GET_MEDIA_PROVIDER } = useUserContext();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -160,14 +160,18 @@ export default function MediaPage({ mediaId }) {
     };
 
 
-    const { loading, error, data } = useQuery(GET_ANIME_DETAILS, {
+    const { loading, data } = useQuery(GET_ANIME_DETAILS, {
         variables: { mediaId: parseInt(mediaId) },
+        onCompleted: () => {
+            setLoadingDone(true);
+        }
     });
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
 
-    const anime = data.Media;
+
+
+
+    const anime = data?.Media;
     const cos = pathname.includes('/anime/') ? userList : userListManga
 
 
@@ -218,11 +222,11 @@ export default function MediaPage({ mediaId }) {
         }
     };
 
-    console.log(anime.id)
 
-    const truncatedDescription = anime.description.length > 730
-        ? anime.description.substring(0, 730) + '...'
-        : anime.description;
+
+    const truncatedDescription = anime?.description?.length > 730
+        ? anime?.description.substring(0, 730) + '...'
+        : anime?.description;
 
     const handleReadMoreClick = () => {
         setIsExpanded(!isExpanded);
@@ -233,14 +237,14 @@ export default function MediaPage({ mediaId }) {
             name: 'Overview',
             url: `/${pathname.includes('/anime/') ? 'anime' : 'manga'}/${mediaId}`
         },
-        ...(anime.streamingEpisodes.length > 0
+        ...(anime?.streamingEpisodes.length > 0
             ? [{ name: 'Watch', url: `/anime/${mediaId}/watch` }]
             : []),
         {
             name: 'Characters',
             url: `/${pathname.includes('/anime/') ? 'anime' : 'manga'}/${mediaId}/characters`
         },
-        ...(anime.staff.length > 0
+        ...(anime?.staff.length > 0
             ? [{ name: 'Staff', url: `/anime/${mediaId}/staff` }]
             : []),
         {
@@ -249,7 +253,7 @@ export default function MediaPage({ mediaId }) {
         },
     ];
 
-    console.log(anime.staff.length + 'sss')
+
 
 
     let chujec = ''; // Poprawna deklaracja
@@ -275,9 +279,9 @@ if (!loading) {
             break;
         default:
             chujec = '';
-    } 
+    }
 }
-   
+
 
     console.log(chujec); // Sprawdzenie poprawności działania
 
@@ -291,7 +295,7 @@ if (!loading) {
                 <div className="header-wrap">
 
                     {<div className="banner" style={{
-                        backgroundImage: anime.bannerImage ? `url(${anime.bannerImage})` : `url(/images/cat.jpg)`,
+                        backgroundImage: anime?.bannerImage ? `url(${anime?.bannerImage})` : `url(/images/cat.jpg)`,
                         position: 'relative',
                     }}>
 
@@ -309,15 +313,15 @@ if (!loading) {
                             minHeight: '250px'
                         }}>
                             <div className="cover-wrap" style={{
-                                marginTop: !anime.bannerImage ? '0' : ''
+                                marginTop: !anime?.bannerImage ? '0' : ''
                             }}>
                                 <div className="cover-wrap-inner" style={{
-                                    position: !anime.bannerImage ? 'static' : ''
+                                    position: !anime?.bannerImage ? 'static' : ''
                                 }}>
                                     <img
                                         className='cover-media'
-                                        src={anime.coverImage.large}
-                                        alt={anime.title.english || anime.title.romaji}
+                                        src={anime?.coverImage?.large}
+                                        alt={anime?.title?.english || anime?.title?.romaji}
                                     />
 
                                     <div className='actions'>
@@ -340,12 +344,12 @@ if (!loading) {
                             </div>
                             <div className="content-media">
 
-                                <h1>{anime.title.english || anime.title.romaji}</h1>
+                                <h1>{anime?.title?.english || anime?.title?.romaji}</h1>
                                 <div className='description-media'>
-                                    <p dangerouslySetInnerHTML={{ __html: isExpanded ? anime.description : truncatedDescription }} />
+                                    <p dangerouslySetInnerHTML={{ __html: isExpanded ? anime?.description : truncatedDescription }} />
                                 </div>
 
-                                {anime.description.length > 730 && <div className='description-length-toggle' onClick={handleReadMoreClick}>
+                                {anime?.description?.length > 730 && <div className='description-length-toggle' onClick={handleReadMoreClick}>
                                     {isExpanded ? 'Read Less' : 'Read More'}
                                 </div>}
 

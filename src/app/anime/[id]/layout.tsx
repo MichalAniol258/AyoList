@@ -486,6 +486,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
   const isClass = useMediaQuery("(min-width: 1040px)");
   const isClassMobile = useMediaQuery("(max-width: 768px)");
   const isClass2 = useMediaQuery("(min-width: 1540px)");
+  const [mediaLoaded, setMediaLoaded] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isLoading2, setLoading2] = useState(false);
   const [isLoading3, setLoading3] = useState(false);
@@ -792,7 +793,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
 
 
-  if (userLoading || userLoading2 || userLoading3) {
+  if (userLoading || userLoading2 || userLoading3 || mediaLoaded) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="w-1 flex justify-center items-center">
@@ -981,12 +982,13 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
     `rgb(104, 214, 57)`, `rgb(2, 169, 255)`, `rgb(146, 86, 243)`, `rgb(247, 121, 164)`, `rgb(232, 93, 117)`, `rgb(247, 154, 99)`
   ]
 
+
   const monthName = getMonthName(media.startDate?.month);
   return (
     <>
       <NavPc />
-      <MediaPage mediaId={id} />
-      <div className="contentContainer content-layout">
+      <MediaPage mediaId={id} setLoadingDone={() => setMediaLoaded(mediaLoaded)} />
+      { (<> <div className="contentContainer content-layout">
         {!errorLoading && <div className="sidebar">
           {media.rankings?.length > 0 && <div className="rankings">
             <Link className="ranking rated" href={'#'}>
@@ -1050,14 +1052,14 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
             {media?.studios?.nodes.length > 0 && <div className="data-set">
               <div className="type-media">Studios</div>
               <div className="value-media">{media.studios?.nodes.map((item) => (
-                item.name
+                  item.name
               ))}</div>
             </div>}
 
             {media2.studios?.nodes.length > 0 && <div className="data-set">
               <div className="type-media">Producers</div>
               <div className="value-media">{media2.studios?.nodes.map((item, index) => (
-                <span key={index}>{item.name}<br /></span>
+                  <span key={index}>{item.name}<br /></span>
               ))}</div>
             </div>}
 
@@ -1074,7 +1076,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
             {media.genres && <div className="data-set">
               <div className="type-media">Genres</div>
               <div className="value-media">{media.genres?.map((item, index) => (
-                <span key={index}>{item} <br /></span>
+                  <span key={index}>{item} <br /></span>
               ))}</div>
             </div>}
 
@@ -1096,20 +1098,20 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
             {media.synonyms?.length > 0 && <div className="data-set">
               <div className="type-media">Synonyms</div>
               <div className="value-media">{media.synonyms?.map((item, index) => (
-                <span key={index}>{item} <br /></span>
+                  <span key={index}>{item} <br /></span>
               ))}</div>
             </div>}
           </div>
           {media.tags?.length > 0 && <div className="tags">
             <h2>Tags</h2>
             {media.tags
-              ?.filter((entry) => !entry.isMediaSpoiler || isSpoiler) // Jeśli isSpoiler == true, pokazuje oba rodzaje tagów
-              .map((item, index) => (
-                <div className={`tag ${item.isMediaSpoiler ? 'spoiler' : ''}`} key={index}>
-                  <Link aria-label={item.description} className="tooltipLink" href={'#'}>{item.name}</Link>
-                  <div className="rank">{item.rank}%</div>
-                </div>
-              ))}
+                ?.filter((entry) => !entry.isMediaSpoiler || isSpoiler) // Jeśli isSpoiler == true, pokazuje oba rodzaje tagów
+                .map((item, index) => (
+                    <div className={`tag ${item.isMediaSpoiler ? 'spoiler' : ''}`} key={index}>
+                      <Link aria-label={item.description} className="tooltipLink" href={'#'}>{item.name}</Link>
+                      <div className="rank">{item.rank}%</div>
+                    </div>
+                ))}
 
             <div className="spoiler-toggle" onClick={() => toggleSpoiler(isSpoiler)}>
               {isSpoiler ? `Hide ${countSpoilerTags?.length} spoiler tags` : `Show ${countSpoilerTags?.length} spoiler tags`}
@@ -1130,28 +1132,28 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
 
                 return (
-                  <motion.a
-                    key={index}
-                    className="external-link"
-                    href={`${item.url}`}
-                    style={{ color: item.color }} // Domyślny kolor
-                    whileHover={{
-                      backgroundColor: item.color, // Zmiana koloru tła
-                    }}
-                    transition={{ duration: 0.1 }}
-                  >
-                    <div className="icon-wrap" style={{
-                      backgroundColor: `${item.color}`
-                    }}>
+                    <motion.a
+                        key={index}
+                        className="external-link"
+                        href={`${item.url}`}
+                        style={{ color: item.color }} // Domyślny kolor
+                        whileHover={{
+                          backgroundColor: item.color, // Zmiana koloru tła
+                        }}
+                        transition={{ duration: 0.1 }}
+                    >
+                      <div className="icon-wrap" style={{
+                        backgroundColor: `${item.color}`
+                      }}>
 
-                      {!item.icon ? <svg data-v-c1b7ee7c="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="link" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="icon-media2"><path data-v-c1b7ee7c="" fill="currentColor" d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"></path></svg>
-                        : <img src={`${item.icon}`} alt="" className="icon" />}
-                    </div>
-                    <span className="name">
+                        {!item.icon ? <svg data-v-c1b7ee7c="" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="link" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="icon-media2"><path data-v-c1b7ee7c="" fill="currentColor" d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"></path></svg>
+                            : <img src={`${item.icon}`} alt="" className="icon" />}
+                      </div>
+                      <span className="name">
                       {item.site}
-                      <span className="language"> {languageCode.toUpperCase() || item.language}</span>
+                        <span className="language"> {languageCode.toUpperCase() || item.language}</span>
                     </span>
-                  </motion.a>
+                    </motion.a>
                 )
               })}
 
@@ -1169,59 +1171,59 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
               <h2>Relations</h2>
               <div className={`${!isClass && 'grid-wrap'}`}>
                 {media.relations?.edges
-                  ?.slice() // Tworzymy kopię, żeby nie modyfikować oryginalnych danych
-                  .sort((a, b) => {
-                    const priorityOrder = ["ADAPTATION", "SOURCE", "PREQUEL", "SEQUEL", "ALTERNATIVE", "PARENT", "SIDE_STORY", "CHARACTER", "SUMMARY", "SPIN_OFF", "OTHER"];
+                    ?.slice() // Tworzymy kopię, żeby nie modyfikować oryginalnych danych
+                    .sort((a, b) => {
+                      const priorityOrder = ["ADAPTATION", "SOURCE", "PREQUEL", "SEQUEL", "ALTERNATIVE", "PARENT", "SIDE_STORY", "CHARACTER", "SUMMARY", "SPIN_OFF", "OTHER"];
 
-                    const indexA = priorityOrder.indexOf(a.relationType) !== -1 ? priorityOrder.indexOf(a.relationType) : priorityOrder.length;
-                    const indexB = priorityOrder.indexOf(b.relationType) !== -1 ? priorityOrder.indexOf(b.relationType) : priorityOrder.length;
+                      const indexA = priorityOrder.indexOf(a.relationType) !== -1 ? priorityOrder.indexOf(a.relationType) : priorityOrder.length;
+                      const indexB = priorityOrder.indexOf(b.relationType) !== -1 ? priorityOrder.indexOf(b.relationType) : priorityOrder.length;
 
-                    return indexA - indexB; // Sortowanie według indeksów w priorityOrder
-                  })
-                  .map((edge, index) => {
-                    const item = edge.node;
+                      return indexA - indexB; // Sortowanie według indeksów w priorityOrder
+                    })
+                    .map((edge, index) => {
+                      const item = edge.node;
 
-                    const formattedRelation = edge.relationType
-                      ?.toLowerCase()
-                      .replace(/_/g, ' ') // Zamiana "_" na spację
-                      .replace(/\b\w/g, char => char.toUpperCase());
-
-
+                      const formattedRelation = edge.relationType
+                          ?.toLowerCase()
+                          .replace(/_/g, ' ') // Zamiana "_" na spację
+                          .replace(/\b\w/g, char => char.toUpperCase());
 
 
-                    const formattedStatus = item.status
-                      ?.toLowerCase()
-                      .replace(/_/g, ' ') // Zamiana "_" na spację
-                      .replace(/\b\w/g, char => char.toUpperCase());
-
-                    const formattedFormat = item.format
-                      ?.toLowerCase()
-                      .replace(/_/g, ' ') // Zamiana "_" na spację
-                      .replace(/\b\w/g, char => char.toUpperCase()) // Zamiana pierwszej litery każdego słowa na wielką
-                      .replace(/\b(Tv|Ova|Ona)\b/gi, match => match.toUpperCase());
 
 
-                    const typeMedia = item.type === 'ANIME' ? '/anime/' : '/manga/'
+                      const formattedStatus = item.status
+                          ?.toLowerCase()
+                          .replace(/_/g, ' ') // Zamiana "_" na spację
+                          .replace(/\b\w/g, char => char.toUpperCase());
 
-                    return (
-                      <div key={index} className={`media-preview-card ${isClass && 'Small'}`}>
-                        <Link className="coverRelations" href={`${typeMedia}${item.id}`} style={{
-                          backgroundImage: `url('${item.coverImage?.extraLarge}')`
-                        }}>
-                          <div className="image-text">
-                            <div>{formattedRelation}</div>
+                      const formattedFormat = item.format
+                          ?.toLowerCase()
+                          .replace(/_/g, ' ') // Zamiana "_" na spację
+                          .replace(/\b\w/g, char => char.toUpperCase()) // Zamiana pierwszej litery każdego słowa na wielką
+                          .replace(/\b(Tv|Ova|Ona)\b/gi, match => match.toUpperCase());
+
+
+                      const typeMedia = item.type === 'ANIME' ? '/anime/' : '/manga/'
+
+                      return (
+                          <div key={index} className={`media-preview-card ${isClass && 'Small'}`}>
+                            <Link className="coverRelations" href={`${typeMedia}${item.id}`} style={{
+                              backgroundImage: `url('${item.coverImage?.extraLarge}')`
+                            }}>
+                              <div className="image-text">
+                                <div>{formattedRelation}</div>
+                              </div>
+                            </Link>
+                            <div className="relationContent">
+                              <div className="infoHeader">
+                                <div>{formattedRelation}</div>
+                              </div>
+                              <Link href={`${typeMedia}${item.id}`} className="relationTitle">{item.title?.english || item.title?.romaji || ""}</Link>
+                              <div className="relationInfo">{formattedFormat} · {formattedStatus}</div>
+                            </div>
                           </div>
-                        </Link>
-                        <div className="relationContent">
-                          <div className="infoHeader">
-                            <div>{formattedRelation}</div>
-                          </div>
-                          <Link href={`${typeMedia}${item.id}`} className="relationTitle">{item.title?.english || item.title?.romaji || ""}</Link>
-                          <div className="relationInfo">{formattedFormat} · {formattedStatus}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
               </div>
             </div></>}
 
@@ -1253,18 +1255,18 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
 
                 <DropdownMenu className="menuDropdown" aria-label="Single selection example"
-                  variant="flat"
-                  disallowEmptySelection={false}
-                  closeOnSelect={false}
-                  selectionMode="single"
-                  selectedKeys={selectedKeys.languages}
-                  onSelectionChange={(keys) => handleSelectionChange("languages", keys as Set<string>)}
+                              variant="flat"
+                              disallowEmptySelection={false}
+                              closeOnSelect={false}
+                              selectionMode="single"
+                              selectedKeys={selectedKeys.languages}
+                              onSelectionChange={(keys) => handleSelectionChange("languages", keys as Set<string>)}
                 >
 
                   {languages.map((item) => {
 
                     return (
-                      <DropdownItem className="dropDownItem" key={item.key}>{item.name}</DropdownItem>
+                        <DropdownItem className="dropDownItem" key={item.key}>{item.name}</DropdownItem>
                     )
                   })}
 
@@ -1278,38 +1280,38 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
                 const item2 = edge.node;
 
                 const formattedName = edge.role
-                  ?.toLowerCase()
-                  .replace(/_/g, ' ') // Zamiana "_" na spację
-                  .replace(/\b\w/g, char => char.toUpperCase());
+                    ?.toLowerCase()
+                    .replace(/_/g, ' ') // Zamiana "_" na spację
+                    .replace(/\b\w/g, char => char.toUpperCase());
 
                 return (
-                  <>
-                    <div key={index} className="role-card view-character-staff">
-                      <div className="character">
-                        <Link className="coverCharacter" href={'#'} style={{
-                          backgroundImage: `url('${item2.image?.large}')`
-                        }} />
-                        <Link href={'#'} className="contentCharacter">
-                          <div className="characterName">{item2.name?.full}</div>
-                          <div className="characterRole">{formattedName}</div>
-                        </Link>
-                      </div>
-                      <div className="staff">
-
-                        <Link href={'#'} className="contentCharacter">
-                          <div className="characterName">{item.name?.full || 'Brak aktora'}</div>
-                          <div className="characterRole">{item.languageV2 || '-'}</div>
-                        </Link>
-                        {item.image?.large && (
+                    <>
+                      <div key={index} className="role-card view-character-staff">
+                        <div className="character">
                           <Link className="coverCharacter" href={'#'} style={{
-                            backgroundImage: `url('${item.image?.large}')`
+                            backgroundImage: `url('${item2.image?.large}')`
                           }} />
-                        )}
+                          <Link href={'#'} className="contentCharacter">
+                            <div className="characterName">{item2.name?.full}</div>
+                            <div className="characterRole">{formattedName}</div>
+                          </Link>
+                        </div>
+                        <div className="staff">
+
+                          <Link href={'#'} className="contentCharacter">
+                            <div className="characterName">{item.name?.full || 'Brak aktora'}</div>
+                            <div className="characterRole">{item.languageV2 || '-'}</div>
+                          </Link>
+                          {item.image?.large && (
+                              <Link className="coverCharacter" href={'#'} style={{
+                                backgroundImage: `url('${item.image?.large}')`
+                              }} />
+                          )}
+                        </div>
                       </div>
-                    </div>
 
 
-                  </>
+                    </>
                 );
               })}
 
@@ -1318,38 +1320,38 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
                 const item2 = edge.node;
 
                 const formattedName = edge.role
-                  ?.toLowerCase()
-                  .replace(/_/g, ' ') // Zamiana "_" na spację
-                  .replace(/\b\w/g, char => char.toUpperCase());
+                    ?.toLowerCase()
+                    .replace(/_/g, ' ') // Zamiana "_" na spację
+                    .replace(/\b\w/g, char => char.toUpperCase());
 
                 return (
-                  <>
-                    <div key={index} className="role-card view-character-staff">
-                      <div className="character">
-                        <Link className="coverCharacter" href={'#'} style={{
-                          backgroundImage: `url('${item2.image?.large}')`
-                        }} />
-                        <Link href={'#'} className="contentCharacter">
-                          <div className="characterName">{item2.name?.full}</div>
-                          <div className="characterRole">{formattedName}</div>
-                        </Link>
-                      </div>
-                      <div className="staff">
-
-                        <Link href={'#'} className="contentCharacter">
-                          <div className="characterName">{item.name?.full || 'Brak aktora'}</div>
-                          <div className="characterRole">{item.languageV2 || '-'}</div>
-                        </Link>
-                        {item.image?.large && (
+                    <>
+                      <div key={index} className="role-card view-character-staff">
+                        <div className="character">
                           <Link className="coverCharacter" href={'#'} style={{
-                            backgroundImage: `url('${item.image?.large}')`
+                            backgroundImage: `url('${item2.image?.large}')`
                           }} />
-                        )}
+                          <Link href={'#'} className="contentCharacter">
+                            <div className="characterName">{item2.name?.full}</div>
+                            <div className="characterRole">{formattedName}</div>
+                          </Link>
+                        </div>
+                        <div className="staff">
+
+                          <Link href={'#'} className="contentCharacter">
+                            <div className="characterName">{item.name?.full || 'Brak aktora'}</div>
+                            <div className="characterRole">{item.languageV2 || '-'}</div>
+                          </Link>
+                          {item.image?.large && (
+                              <Link className="coverCharacter" href={'#'} style={{
+                                backgroundImage: `url('${item.image?.large}')`
+                              }} />
+                          )}
+                        </div>
                       </div>
-                    </div>
 
 
-                  </>
+                    </>
                 );
               })}
 
@@ -1392,23 +1394,23 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
                 const item2 = edge.node;
 
                 const formattedName = edge.role
-                  ?.toLowerCase()
-                  .replace(/_/g, ' ') // Zamiana "_" na spację
-                  .replace(/\b\w/g, char => char.toUpperCase());
+                    ?.toLowerCase()
+                    .replace(/_/g, ' ') // Zamiana "_" na spację
+                    .replace(/\b\w/g, char => char.toUpperCase());
 
                 return (
-                  <div key={index} className="role-card view-staff small2">
-                    <div className="staff">
-                      <Link className="coverCharacter" href={'#'} style={{
-                        backgroundImage: `url('${item2.image?.large}')`
-                      }} />
-                      <Link href={'#'} className="contentCharacter">
-                        <div className="characterName">{item2.name?.full}</div>
-                        <div className="characterRole">{formattedName}</div>
-                      </Link>
-                    </div>
+                    <div key={index} className="role-card view-staff small2">
+                      <div className="staff">
+                        <Link className="coverCharacter" href={'#'} style={{
+                          backgroundImage: `url('${item2.image?.large}')`
+                        }} />
+                        <Link href={'#'} className="contentCharacter">
+                          <div className="characterName">{item2.name?.full}</div>
+                          <div className="characterRole">{formattedName}</div>
+                        </Link>
+                      </div>
 
-                  </div>
+                    </div>
                 );
               })}
 
@@ -1445,23 +1447,23 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
                     return { ...item, totalAmount, percentage };
 
                   }).sort((a, b) => b.percentage - a.percentage)
-                    .map((item, index) => (
-                      <div className="overview-genre" key={index}>
-                        <div className="name-overview" style={{
-                          background: `${color[index]}`
-                        }}>
-                          {item.status
-                            ?.toLowerCase()
-                            .replace(/_/g, ' ') // Zamiana "_" na spację
-                            .replace(/\b\w/g, char => char.toUpperCase())}
-                        </div>
-                        <div className="amount-overview" style={{
-                          color: `${color[index]}`
-                        }}>
-                          {item.amount} <span className="label-overview">Users</span>
-                        </div>
-                      </div>
-                    ))
+                      .map((item, index) => (
+                          <div className="overview-genre" key={index}>
+                            <div className="name-overview" style={{
+                              background: `${color[index]}`
+                            }}>
+                              {item.status
+                                  ?.toLowerCase()
+                                  .replace(/_/g, ' ') // Zamiana "_" na spację
+                                  .replace(/\b\w/g, char => char.toUpperCase())}
+                            </div>
+                            <div className="amount-overview" style={{
+                              color: `${color[index]}`
+                            }}>
+                              {item.amount} <span className="label-overview">Users</span>
+                            </div>
+                          </div>
+                      ))
                   }
                 </div>
                 <div className="percentage-bar-overview">
@@ -1475,39 +1477,39 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
                     return { ...item, totalAmount, percentage };
 
                   }).sort((a, b) => b.percentage - a.percentage)
-                    .map((item, index) => {
-                      return (
-                        <Tooltip
-                          key={index}
-                          showArrow={true}
-                          placement="top"
-                          closeDelay={150}
-                          delay={50}
-                          className="Tooltipek"
-                          color="foreground"
-                          content={item.status?.toLowerCase()
-                            .replace(/_/g, ' ') // Zamiana "_" na spację
-                            .replace(/\b\w/g, char => char.toUpperCase())}
-                          offset={30}
-                          style={{
-                            zIndex: "1",
-                            color: `${color[index]}`,
+                      .map((item, index) => {
+                        return (
+                            <Tooltip
+                                key={index}
+                                showArrow={true}
+                                placement="top"
+                                closeDelay={150}
+                                delay={50}
+                                className="Tooltipek"
+                                color="foreground"
+                                content={item.status?.toLowerCase()
+                                    .replace(/_/g, ' ') // Zamiana "_" na spację
+                                    .replace(/\b\w/g, char => char.toUpperCase())}
+                                offset={30}
+                                style={{
+                                  zIndex: "1",
+                                  color: `${color[index]}`,
 
-                          }}
-                        >
-                          <div
-                            style={{ minWidth: `${item.percentage}%`, background: `${color[index]}` }} // Ustawienie minWidth w procentach
-                            className="el-tooltip percentage-overview"
-                            key={index}
-                          >
+                                }}
+                            >
+                              <div
+                                  style={{ minWidth: `${item.percentage}%`, background: `${color[index]}` }} // Ustawienie minWidth w procentach
+                                  className="el-tooltip percentage-overview"
+                                  key={index}
+                              >
 
-                          </div>
-                        </Tooltip>
-                      );
+                              </div>
+                            </Tooltip>
+                        );
 
 
 
-                    })
+                      })
                   }
 
                 </div>
@@ -1527,32 +1529,32 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
                 <ChartContainer config={chartConfig} className="h-[113px] w-full">
                   <BarChart
 
-                    data={chartData}
-                    margin={{
-                      top: 20,
-                    }}
+                      data={chartData}
+                      margin={{
+                        top: 20,
+                      }}
                   >
 
                     <XAxis
-                      dataKey="score"
-                      tickLine={false}
-                      tickMargin={5}
-                      axisLine={false}
-                      className="labels"
-                      color="red"
-                      fontSize={9}
+                        dataKey="score"
+                        tickLine={false}
+                        tickMargin={5}
+                        axisLine={false}
+                        className="labels"
+                        color="red"
+                        fontSize={9}
                     />
                     <ChartTooltip
-                      cursor={false}
-                      wrapperClassName="padding"
-                      content={<ChartTooltipContent className="padding" hideLabel />}
+                        cursor={false}
+                        wrapperClassName="padding"
+                        content={<ChartTooltipContent className="padding" hideLabel />}
                     />
                     <Bar dataKey="amount" fill={kolorek1} radius={8}>
                       <LabelList
-                        position="top"
-                        offset={9}
-                        className="fill-foreground"
-                        fontSize={9}
+                          position="top"
+                          offset={9}
+                          className="fill-foreground"
+                          fontSize={9}
                       />
                     </Bar>
 
@@ -1565,105 +1567,105 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
           </div>}
           {pathname.includes("/stats") && airingProgression.length > 0 &&
-            <>
-              <h2 className="Link">
-                Airing Score & Watchers Progression
-              </h2>
-              <Card className="chart media-score-distribution rounded-[4px] !border-none">
+              <>
+                <h2 className="Link">
+                  Airing Score & Watchers Progression
+                </h2>
+                <Card className="chart media-score-distribution rounded-[4px] !border-none">
 
-                <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-                  <ChartContainer
-                    config={chartConfig2}
-                    className="aspect-auto h-[250px] w-full"
-                  >
-                    <AreaChart data={chartData3}>
-                      <defs>
+                  <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+                    <ChartContainer
+                        config={chartConfig2}
+                        className="aspect-auto h-[250px] w-full"
+                    >
+                      <AreaChart data={chartData3}>
+                        <defs>
 
-                        <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                          <stop
-                            offset="5%"
-                            stopColor="#00BC80"
-                            stopOpacity={0.8}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="#00BC80"
-                            stopOpacity={0.1}
-                          />
-                        </linearGradient>
+                          <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+                            <stop
+                                offset="5%"
+                                stopColor="#00BC80"
+                                stopOpacity={0.8}
+                            />
+                            <stop
+                                offset="95%"
+                                stopColor="#00BC80"
+                                stopOpacity={0.1}
+                            />
+                          </linearGradient>
 
-                        <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                          <stop
-                            offset="5%"
-                            stopColor="#B7D59E"
-                            stopOpacity={0.8}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="#B7D59E"
-                            stopOpacity={0.1}
-                          />
-                        </linearGradient>
-
-
-
-
-
-
-                      </defs>
-                      <CartesianGrid className="gridColor" vertical={false} />
-                      <XAxis
-                        dataKey="episode"
-                        tickLine={false}
-                        axisLine={false}
-                        tickMargin={8}
-                        className="labels"
-                        minTickGap={32}
-                        fontSize={9}
-
-                      />
-                      <ChartTooltip
-                        cursor={false}
-
-                        content={
-                          <ChartTooltipContent className="padding"
-                            hideLabel
-                            indicator="dot"
-
-                          />
-                        }
-                      />
+                          <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                            <stop
+                                offset="5%"
+                                stopColor="#B7D59E"
+                                stopOpacity={0.8}
+                            />
+                            <stop
+                                offset="95%"
+                                stopColor="#B7D59E"
+                                stopOpacity={0.1}
+                            />
+                          </linearGradient>
 
 
 
 
 
-                      <Area
-                        dataKey="score"
-                        type="natural"
-                        fill="url(#fillDesktop)"
-                        stroke="#B7D59E"
-                        stackId="a"
-                      />
+
+                        </defs>
+                        <CartesianGrid className="gridColor" vertical={false} />
+                        <XAxis
+                            dataKey="episode"
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={8}
+                            className="labels"
+                            minTickGap={32}
+                            fontSize={9}
+
+                        />
+                        <ChartTooltip
+                            cursor={false}
+
+                            content={
+                              <ChartTooltipContent className="padding"
+                                                   hideLabel
+                                                   indicator="dot"
+
+                              />
+                            }
+                        />
 
 
 
-                      <Area
-                        dataKey="watching"
-                        type="natural"
-                        fill="url(#fillMobile)"
-                        stroke="#00BC80"
-                        stackId="a"
-                      />
+
+
+                        <Area
+                            dataKey="score"
+                            type="natural"
+                            fill="url(#fillDesktop)"
+                            stroke="#B7D59E"
+                            stackId="a"
+                        />
+
+
+
+                        <Area
+                            dataKey="watching"
+                            type="natural"
+                            fill="url(#fillMobile)"
+                            stroke="#00BC80"
+                            stackId="a"
+                        />
 
 
 
 
-                    </AreaChart>
-                  </ChartContainer>
-                </CardContent>
-              </Card>
-            </>}
+                      </AreaChart>
+                    </ChartContainer>
+                  </CardContent>
+                </Card>
+              </>}
 
 
 
@@ -1673,11 +1675,11 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
               {media.streamingEpisodes?.slice(0, pathname.includes('/watch') ? undefined : 4).map((edge, index) => {
 
                 return (
-                  <Link key={index} href={edge.url} style={{
-                    backgroundImage: `url('${edge.thumbnail}')`
-                  }} className={`episode ${isClassMobile && pathname.includes("/watch") && 'episodeMobile'}`}>
-                    <div className="episodeTitle">{edge.title}</div>
-                  </Link>
+                    <Link key={index} href={edge.url} style={{
+                      backgroundImage: `url('${edge.thumbnail}')`
+                    }} className={`episode ${isClassMobile && pathname.includes("/watch") && 'episodeMobile'}`}>
+                      <div className="episodeTitle">{edge.title}</div>
+                    </Link>
                 );
               })}
             </div>
@@ -1690,16 +1692,16 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
               <div className="following">
                 <div className="limit">
                   {filteredMediaIds.map((item, index) => (
-                    <Link key={index} href={''} className="follow">
-                      <div className="avatarFollow" style={{
-                        backgroundImage: `url('${item.userAvatar}')`
-                      }}></div>
-                      <div className="nameFollow">{item.userName}</div>
-                      <div className="statusFollow">{item.status.toLowerCase()
-                        .replace(/_/g, ' ') // Zamiana "_" na spację
-                        .replace(/\b\w/g, char => char.toUpperCase())}</div>
-                      <span>{item.score}/10</span>
-                    </Link>
+                      <Link key={index} href={''} className="follow">
+                        <div className="avatarFollow" style={{
+                          backgroundImage: `url('${item.userAvatar}')`
+                        }}></div>
+                        <div className="nameFollow">{item.userName}</div>
+                        <div className="statusFollow">{item.status.toLowerCase()
+                            .replace(/_/g, ' ') // Zamiana "_" na spację
+                            .replace(/\b\w/g, char => char.toUpperCase())}</div>
+                        <span>{item.score}/10</span>
+                      </Link>
                   ))}
 
                 </div>
@@ -1719,26 +1721,26 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
                 const rel = item.node?.mediaRecommendation
 
                 return (
-                  < div key={index} className="recommendation-card" >
-                    <div className="coverRecommendation">
-                      <Link href={`${rel?.id}`} className="cover-link" style={{
-                        backgroundImage: `url('${rel?.coverImage.extraLarge}')`
-                      }}></Link>
-                      <Link href={`${rel?.id}`}>
-                        <div className="titleRecommend">
-                          <div style={{
-                            overflow: 'hidden'
-                          }}>
+                    < div key={index} className="recommendation-card" >
+                      <div className="coverRecommendation">
+                        <Link href={`${rel?.id}`} className="cover-link" style={{
+                          backgroundImage: `url('${rel?.coverImage.extraLarge}')`
+                        }}></Link>
+                        <Link href={`${rel?.id}`}>
+                          <div className="titleRecommend">
+                            <div style={{
+                              overflow: 'hidden'
+                            }}>
                             <span style={{
                               boxShadow: 'transparent 0px 0px'
                             }}>
                               <span>{rel?.title?.english || rel?.title?.romaji}</span>
                             </span>
+                            </div>
                           </div>
-                        </div>
-                      </Link>
+                        </Link>
+                      </div>
                     </div>
-                  </div>
                 )
               })}
 
@@ -1772,7 +1774,8 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
           {children}
         </div >
-      </div >
+      </div ></>)}
+
       <Nav />
     </>
   );

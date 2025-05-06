@@ -275,10 +275,10 @@ export default function PopularNow() {
                                             </div>
 
                                         </Link>
-                                        <div className="flex justify-start items-center gap-1">
+                                        {item.meanScore !== null &&<div className="flex justify-start items-center gap-1">
                                             <img src="/images/star.svg" className="star" alt="" />
                                             {item.meanScore !== null && <span className="text-[0.8rem]">{item.meanScore}{item.meanScore !== null && "%"}</span>}
-                                        </div>
+                                        </div>}
 
                                     </motion.div>
                                 </Tooltip>

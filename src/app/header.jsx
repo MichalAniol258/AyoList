@@ -1856,10 +1856,10 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
                                                 </div>
 
                                             </Link>
-                                            <div className="flex justify-start items-center gap-1">
+                                            {item.meanScore !== null &&<div className="flex justify-start items-center gap-1">
                                                 <img src="/images/star.svg" className="star" alt="" />
                                                 {item.meanScore !== null && <span className="text-[0.8rem]">{item.meanScore}{item.meanScore !== null && "%"}</span>}
-                                            </div>
+                                            </div>}
                                         </div>
                                     </Tooltip>
                                 );
@@ -1953,10 +1953,10 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
                                                 </div>
 
                                             </Link>
-                                            <div className="flex justify-start items-center gap-1">
+                                            {item.meanScore !== null &&<div className="flex justify-start items-center gap-1">
                                                 <img src="/images/star.svg" className="star" alt="" />
                                                 {item.meanScore !== null && <span className="text-[0.8rem]">{item.meanScore}{item.meanScore !== null && "%"}</span>}
-                                            </div>
+                                            </div>}
                                         </motion.div>
                                     </Tooltip>
                                 )
@@ -2072,8 +2072,10 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
                                                     )}
 
                                                     <div className="chuj3">
-                                                        <img src="/images/star.svg" className="star" alt="" />
-                                                        <p className="chuj25">{item.meanScore}</p>
+                                                        {item.meanScore !== null &&<>
+                                                            <img src="/images/star.svg" className="star" alt="" />
+                                                            {item.meanScore !== null && <span className="chuj25">{item.meanScore}{item.meanScore !== null && "%"}</span>}
+                                                        </>}
                                                         <p className="chuj25">Ep</p>
                                                         <span className="krzywychuj">{item.nextAiringEpisode?.episode} </span>
                                                     </div>
@@ -2125,10 +2127,10 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
                                                     </div>
 
                                                 </Link>
-                                                <div className="flex justify-start items-center gap-1">
+                                                {item.meanScore !== null &&<div className="flex justify-start items-center gap-1">
                                                     <img src="/images/star.svg" className="star" alt="" />
                                                     {item.meanScore !== null && <span className="text-[0.8rem]">{item.meanScore}{item.meanScore !== null && "%"}</span>}
-                                                </div>
+                                                </div>}
                                             </motion.div>
                                         </Tooltip>)
 
@@ -2220,10 +2222,10 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
                                                     </div>
 
                                                 </Link>
-                                                <div className="flex justify-start items-center gap-1">
+                                                {item.meanScore !== null &&<div className="flex justify-start items-center gap-1">
                                                     <img src="/images/star.svg" className="star" alt="" />
                                                     {item.meanScore !== null && <span className="text-[0.8rem]">{item.meanScore}{item.meanScore !== null && "%"}</span>}
-                                                </div>
+                                                </div>}
                                             </motion.div>
                                         </Tooltip>
 
@@ -2307,10 +2309,10 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
                                                 </div>
 
                                             </Link>
-                                            <div className="flex justify-start items-center gap-1">
+                                            {item.meanScore !== null &&<div className="flex justify-start items-center gap-1">
                                                 <img src="/images/star.svg" className="star" alt="" />
                                                 {item.meanScore !== null && <span className="text-[0.8rem]">{item.meanScore}{item.meanScore !== null && "%"}</span>}
-                                            </div>
+                                            </div>}
                                         </motion.div>
                                     </Tooltip>
 

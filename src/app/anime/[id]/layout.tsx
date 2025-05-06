@@ -446,6 +446,96 @@ query MediaTrend($mediaId: Int) {
 `;
 
 
+const GET_ANIME_DETAILS = gql`
+query ($mediaId: Int) {
+  Media(id: $mediaId) {
+    id
+    title {
+      romaji
+      english
+      native
+    }
+    format
+    genres
+    countryOfOrigin
+    coverImage {
+      large
+      extraLarge
+    }
+    meanScore
+    episodes
+    status
+    startDate {
+      year
+      month
+      day
+    }
+    endDate {
+      year
+      month
+      day
+    }
+    popularity
+    volumes
+    chapters
+    isFavourite
+    bannerImage
+    averageScore
+    duration
+    description
+    favourites
+    hashtag
+    nextAiringEpisode {
+      timeUntilAiring
+      mediaId
+  
+      airingAt
+      episode
+    }
+    type
+    tags {
+      rank
+      name
+      isMediaSpoiler
+      description
+      category
+      id
+      isAdult
+      isGeneralSpoiler
+    }
+    synonyms
+    seasonYear
+    season
+    rankings {
+      allTime
+      context
+      format
+      id
+      rank
+      season
+      type
+      year
+    }
+    streamingEpisodes {
+      title
+      url
+    }
+    staff {
+      edges {
+        node {
+          id
+        }
+      }
+    }
+  }
+}
+`;
+
+
+
+
+
+
 interface MediaList {
   entries?: MediaListEntry[];
 }
@@ -486,7 +576,6 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
   const isClass = useMediaQuery("(min-width: 1040px)");
   const isClassMobile = useMediaQuery("(max-width: 768px)");
   const isClass2 = useMediaQuery("(min-width: 1540px)");
-  const [mediaLoaded, setMediaLoaded] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isLoading2, setLoading2] = useState(false);
   const [isLoading3, setLoading3] = useState(false);
@@ -580,7 +669,9 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
     }
   });
 
-
+  const { loading: loadingMedia, data: mediaData } = useQuery(GET_ANIME_DETAILS, {
+    variables: { mediaId: id },
+  });
   const { data: user, loading: userLoading3 } = useQuery(MEDIA_INFO, {
     variables: { mediaId: id, isMain: false, version: 2 }
   });
@@ -726,7 +817,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          console.log("Ostatni element widoczny, ładowanie więcej...");
+
           loadMore();
         }
       },
@@ -793,7 +884,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
 
 
-  if (userLoading || userLoading2 || userLoading3 || mediaLoaded) {
+  if (userLoading || userLoading2 || userLoading3 || loadingMedia) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="w-1 flex justify-center items-center">
@@ -849,8 +940,6 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
       </div>
     );
   }
-
-
 
 
 
@@ -983,11 +1072,16 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
   ]
 
 
+
   const monthName = getMonthName(media.startDate?.month);
   return (
     <>
       <NavPc />
-      <MediaPage mediaId={id} setLoadingDone={() => setMediaLoaded(mediaLoaded)} />
+      <MediaPage
+          mediaId={id}
+          mediaLoading={loadingMedia}
+          mediaData={mediaData}
+      />
       { (<> <div className="contentContainer content-layout">
         {!errorLoading && <div className="sidebar">
           {media.rankings?.length > 0 && <div className="rankings">

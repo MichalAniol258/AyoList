@@ -1,95 +1,11 @@
 "use client";
-import { gql, useQuery, useMutation } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useUserContext } from '../../components/userListWrapper'
 import EditComponent from '../../components/EditComponent'
 import { useUser } from "../../components/userInfoWrapper";
-const GET_ANIME_DETAILS = gql`
-query ($mediaId: Int) {
-  Media(id: $mediaId) {
-    id
-    title {
-      romaji
-      english
-      native
-    }
-    format
-    genres
-    countryOfOrigin
-    coverImage {
-      large
-      extraLarge
-    }
-    meanScore
-    episodes
-    status
-    startDate {
-      year
-      month
-      day
-    }
-    endDate {
-      year
-      month
-      day
-    }
-    popularity
-    volumes
-    chapters
-    isFavourite
-    bannerImage
-    averageScore
-    duration
-    description
-    favourites
-    hashtag
-    nextAiringEpisode {
-      timeUntilAiring
-      mediaId
-  
-      airingAt
-      episode
-    }
-    type
-    tags {
-      rank
-      name
-      isMediaSpoiler
-      description
-      category
-      id
-      isAdult
-      isGeneralSpoiler
-    }
-    synonyms
-    seasonYear
-    season
-    rankings {
-      allTime
-      context
-      format
-      id
-      rank
-      season
-      type
-      year
-    }
-    streamingEpisodes {
-      title
-      url
-    }
-    staff {
-      edges {
-        node {
-          id
-        }
-      }
-    }
-  }
-}
-`;
 
 
 const SAVE_FAVOURITE = gql`
@@ -111,7 +27,7 @@ mutation Mutation($animeId: Int, $mangaId: Int) {
 }
 `;
 
-export default function MediaPage({ mediaId, setLoadedMedia }) {
+export default function MediaPage({ mediaId, mediaData, mediaLoading }) {
     const { userList, userListManga, GET_MEDIA_PROVIDER } = useUserContext();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -158,17 +74,10 @@ export default function MediaPage({ mediaId, setLoadedMedia }) {
     };
 
 
-    const { loading, error, data } = useQuery(GET_ANIME_DETAILS, {
-        variables: { mediaId: parseInt(mediaId) },
-        onCompleted: () => {
-            setLoadedMedia(true);
-        }
-    });
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
 
-    const anime = data.Media;
+
+    const anime = mediaData?.Media;
     const cos = pathname.includes('/anime/') ? userList : userListManga
 
 
@@ -218,9 +127,9 @@ export default function MediaPage({ mediaId, setLoadedMedia }) {
 
 
 
-    const truncatedDescription = anime.description.length > 730
-        ? anime.description.substring(0, 730) + '...'
-        : anime.description;
+    const truncatedDescription = anime?.description?.length > 730
+        ? anime?.description.substring(0, 730) + '...'
+        : anime?.description;
 
     const handleReadMoreClick = () => {
         setIsExpanded(!isExpanded);
@@ -231,14 +140,14 @@ export default function MediaPage({ mediaId, setLoadedMedia }) {
             name: 'Overview',
             url: `/${pathname.includes('/anime/') ? 'anime' : 'manga'}/${mediaId}`
         },
-        ...(anime.streamingEpisodes.length > 0
+        ...(anime?.streamingEpisodes.length > 0
             ? [{ name: 'Watch', url: `/manga/${mediaId}/watch` }]
             : []),
         {
             name: 'Characters',
             url: `/${pathname.includes('/anime/') ? 'anime' : 'manga'}/${mediaId}/characters`
         },
-        ...(anime.staff.edges.length > 0
+        ...(anime?.staff?.edges.length > 0
             ? [{ name: 'Staff', url: `/manga/${mediaId}/staff` }]
             : []),
         {
@@ -250,7 +159,7 @@ export default function MediaPage({ mediaId, setLoadedMedia }) {
 
 
     let chujec = ''; // Poprawna deklaracja
-    if (!loading) {
+    if (!mediaLoading) {
         switch (entry?.status) {
             case "CURRENT":
                 chujec = pathname.includes('/anime/') ? 'Watching' : 'Reading';
@@ -286,7 +195,7 @@ export default function MediaPage({ mediaId, setLoadedMedia }) {
                 <div className="header-wrap">
 
                     {<div className="banner" style={{
-                        backgroundImage: anime.bannerImage ? `url(${anime.bannerImage})` : `url(/images/cat.jpg)`,
+                        backgroundImage: anime?.bannerImage ? `url(${anime?.bannerImage})` : `url(/images/cat.jpg)`,
                         position: 'relative',
                     }}>
 
@@ -304,15 +213,15 @@ export default function MediaPage({ mediaId, setLoadedMedia }) {
                             minHeight: '250px'
                         }}>
                             <div className="cover-wrap" style={{
-                                marginTop: !anime.bannerImage ? '0' : ''
+                                marginTop: !anime?.bannerImage ? '0' : ''
                             }}>
                                 <div className="cover-wrap-inner" style={{
-                                    position: !anime.bannerImage ? 'static' : ''
+                                    position: !anime?.bannerImage ? 'static' : ''
                                 }}>
                                     <img
                                         className='cover-media'
-                                        src={anime.coverImage.large}
-                                        alt={anime.title.english || anime.title.romaji}
+                                        src={anime?.coverImage?.large}
+                                        alt={anime?.title?.english || anime?.title?.romaji}
                                     />
 
                                     <div className='actions'>
@@ -320,7 +229,7 @@ export default function MediaPage({ mediaId, setLoadedMedia }) {
                                             <div className='add-media' onClick={() => handleEdit('edit', mediaId)}>{chujec || "Add to List"}</div>
                                             <div className='dropdown el-dropdown'>
                                                 <span className='el-dropdown-link el-dropdown-selfdefine'>
-                                                    <i data-v-5776f768="" class="el-icon-arrow-down el-icon--right"></i>
+                                                    <i data-v-5776f768="" className="el-icon-arrow-down el-icon--right"></i>
                                                 </span>
                                             </div>
 
@@ -335,12 +244,12 @@ export default function MediaPage({ mediaId, setLoadedMedia }) {
                             </div>
                             <div className="content-media">
 
-                                <h1>{anime.title.english || anime.title.romaji}</h1>
+                                <h1>{anime?.title?.english || anime?.title?.romaji}</h1>
                                 <div className='description-media'>
-                                    <p dangerouslySetInnerHTML={{ __html: isExpanded ? anime.description : truncatedDescription }} />
+                                    <p dangerouslySetInnerHTML={{ __html: isExpanded ? anime?.description : truncatedDescription }} />
                                 </div>
 
-                                {anime.description.length > 730 && <div className='description-length-toggle' onClick={handleReadMoreClick}>
+                                {anime?.description.length > 730 && <div className='description-length-toggle' onClick={handleReadMoreClick}>
                                     {isExpanded ? 'Read Less' : 'Read More'}
                                 </div>}
 

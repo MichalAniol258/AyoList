@@ -1,95 +1,11 @@
 "use client";
-import { gql, useQuery, useMutation } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {useEffect, useState} from 'react';
+import { useState} from 'react';
 import { useUserContext } from '../../components/userListWrapper'
 import EditComponent from '../../components/EditComponent'
 import { useUser } from "../../components/userInfoWrapper";
-const GET_ANIME_DETAILS = gql`
-query ($mediaId: Int) {
-  Media(id: $mediaId) {
-    id
-    title {
-      romaji
-      english
-      native
-    }
-    format
-    genres
-    countryOfOrigin
-    coverImage {
-      large
-      extraLarge
-    }
-    meanScore
-    episodes
-    status
-    startDate {
-      year
-      month
-      day
-    }
-    endDate {
-      year
-      month
-      day
-    }
-    popularity
-    volumes
-    chapters
-    isFavourite
-    bannerImage
-    averageScore
-    duration
-    description
-    favourites
-    hashtag
-    nextAiringEpisode {
-      timeUntilAiring
-      mediaId
-  
-      airingAt
-      episode
-    }
-    type
-    tags {
-      rank
-      name
-      isMediaSpoiler
-      description
-      category
-      id
-      isAdult
-      isGeneralSpoiler
-    }
-    synonyms
-    seasonYear
-    season
-    rankings {
-      allTime
-      context
-      format
-      id
-      rank
-      season
-      type
-      year
-    }
-    streamingEpisodes {
-      title
-      url
-    }
-    staff {
-      edges {
-        node {
-          id
-        }
-      }
-    }
-  }
-}
-`;
 
 
 
@@ -113,7 +29,7 @@ mutation Mutation($animeId: Int, $mangaId: Int) {
 }
 `;
 
-export default function MediaPage({ mediaId, setLoadingDone  }) {
+export default function MediaPage({ mediaId, mediaData, mediaLoading  }) {
     const { userList, userListManga, GET_MEDIA_PROVIDER } = useUserContext();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -160,18 +76,23 @@ export default function MediaPage({ mediaId, setLoadingDone  }) {
     };
 
 
-    const { loading, data } = useQuery(GET_ANIME_DETAILS, {
-        variables: { mediaId: parseInt(mediaId) },
-        onCompleted: () => {
-            setLoadingDone(true);
-        }
-    });
 
 
 
 
 
-    const anime = data?.Media;
+
+
+
+
+
+
+
+
+
+
+
+    const anime = mediaData?.Media;
     const cos = pathname.includes('/anime/') ? userList : userListManga
 
 
@@ -257,7 +178,7 @@ export default function MediaPage({ mediaId, setLoadingDone  }) {
 
 
     let chujec = ''; // Poprawna deklaracja
-if (!loading) {
+if (!mediaLoading) {
     switch (entry?.status) {
         case "CURRENT":
             chujec = pathname.includes('/anime/') ? 'Watching' : 'Reading';
@@ -283,7 +204,7 @@ if (!loading) {
 }
 
 
-    console.log(chujec); // Sprawdzenie poprawności działania
+
 
 
 

@@ -419,6 +419,92 @@ const MEDIA_INFO = gql`
     }
   }`
 
+
+const GET_ANIME_DETAILS = gql`
+query ($mediaId: Int) {
+  Media(id: $mediaId) {
+    id
+    title {
+      romaji
+      english
+      native
+    }
+    format
+    genres
+    countryOfOrigin
+    coverImage {
+      large
+      extraLarge
+    }
+    meanScore
+    episodes
+    status
+    startDate {
+      year
+      month
+      day
+    }
+    endDate {
+      year
+      month
+      day
+    }
+    popularity
+    volumes
+    chapters
+    isFavourite
+    bannerImage
+    averageScore
+    duration
+    description
+    favourites
+    hashtag
+    nextAiringEpisode {
+      timeUntilAiring
+      mediaId
+  
+      airingAt
+      episode
+    }
+    type
+    tags {
+      rank
+      name
+      isMediaSpoiler
+      description
+      category
+      id
+      isAdult
+      isGeneralSpoiler
+    }
+    synonyms
+    seasonYear
+    season
+    rankings {
+      allTime
+      context
+      format
+      id
+      rank
+      season
+      type
+      year
+    }
+    streamingEpisodes {
+      title
+      url
+    }
+    staff {
+      edges {
+        node {
+          id
+        }
+      }
+    }
+  }
+}
+`;
+
 const MediaTrend = gql`
 query MediaTrend($mediaId: Int) {
   MediaTrend(mediaId: $mediaId, sort: EPISODE_DESC) {
@@ -487,7 +573,6 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
   const [isLoading, setLoading] = useState(false);
   const [isLoading2, setLoading2] = useState(false);
-  const [mediaLoaded, setMediaLoaded] = useState(false);
   const [isLoading3, setLoading3] = useState(false);
   const [isSpoiler, setSpoiler] = useState(false);
   const [isToggle, setToggle] = useState(false);
@@ -576,7 +661,9 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
       mediaId: id
     }
   });
-
+  const { loading: mediaLoading, data: mediaData } = useQuery(GET_ANIME_DETAILS, {
+    variables: { mediaId: id }
+  });
 
   const { data: user, loading: userLoading3, } = useQuery(MEDIA_INFO, {
     variables: { mediaId: id, isMain: false, version: 2 }
@@ -793,7 +880,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
 
 
 
-  if (userLoading || userLoading2 || userLoading3 || mediaLoaded) {
+  if (userLoading || userLoading2 || userLoading3 || mediaLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="w-1 flex justify-center items-center">
@@ -986,7 +1073,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
   return (
     <>
       <NavPc />
-      <MediaPage mediaId={id} setLoadedMedia={() => setMediaLoaded(mediaLoaded)} />
+      <MediaPage mediaId={id} mediaData={mediaData} mediaLoading={mediaLoading} />
       <div className="contentContainer content-layout">
         <div className="sidebar">
           {media.rankings?.length > 0 && <div className="rankings">

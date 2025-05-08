@@ -267,7 +267,7 @@ export default function NavPc() {
             <Link href={"/"} className="logoNavPc"
                   onMouseOver={() => setHovered(true)}
                   onMouseOut={() => setHovered(false)}>
-              <Image src={"/images/2.png"} width={50} height={50} className="navPcLogo" alt="cos" unoptimized />
+              <img src={"/images/2.png"} width={50} height={50} className="navPcLogo" alt="cos"/>
             </Link>
 
             <div className="links">

@@ -1849,7 +1849,7 @@ body:has(.container) {
 .navPcLogo {
   width: auto;
   height: 60px;
-  max-width: unset;
+  max-width: none;
 }
 
 .menuDropdown {

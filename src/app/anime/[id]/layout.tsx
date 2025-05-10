@@ -1207,9 +1207,11 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
                     </div>
                 ))}
 
-            <div className="spoiler-toggle" onClick={() => toggleSpoiler(isSpoiler)}>
-              {isSpoiler ? `Hide ${countSpoilerTags?.length} spoiler tags` : `Show ${countSpoilerTags?.length} spoiler tags`}
-            </div>
+            {countSpoilerTags?.length > 0 && (
+                <div className="spoiler-toggle" onClick={() => toggleSpoiler(isSpoiler)}>
+                  {isSpoiler ? `Hide ${countSpoilerTags.length} spoiler tags` : `Show ${countSpoilerTags.length} spoiler tags`}
+                </div>
+            )}
 
 
 
@@ -1873,9 +1875,11 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
                     </div>
                 ))}
 
-            <div className="spoiler-toggle" onClick={() => toggleSpoiler(isSpoiler)}>
-              {isSpoiler ? `Hide ${countSpoilerTags?.length} spoiler tags` : `Show ${countSpoilerTags?.length} spoiler tags`}
-            </div>
+            {countSpoilerTags?.length > 0 && (
+                <div className="spoiler-toggle" onClick={() => toggleSpoiler(isSpoiler)}>
+                  {isSpoiler ? `Hide ${countSpoilerTags.length} spoiler tags` : `Show ${countSpoilerTags.length} spoiler tags`}
+                </div>
+            )}
 
 
 

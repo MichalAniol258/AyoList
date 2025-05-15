@@ -166,7 +166,9 @@ export default function Header({ handleChangeFocus }) {
     const [focus, setFocus] = useState(false);
     const [query, setQuery] = useState("");
     const [isVisible, setVisible] = useState(false)
-    const [searchAnime, { data, error, loading }] = useLazyQuery(SEARCH_ANIME)
+    const [searchAnime, { data, error, loading }] = useLazyQuery(SEARCH_ANIME, {
+        fetchPolicy: 'cache-and-network',
+    })
     const [showResults, setResults] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const isAdult = false;
@@ -307,7 +309,9 @@ export default function Header({ handleChangeFocus }) {
             isAdult, sort: sortArray === "" ? sorter : sortArray, type: type,
             countryOfOrigin: countryOfOrigin || undefined,
             status: statusSearch || undefined,
-        }
+        },
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
 
     sorter = "POPULARITY_DESC"
@@ -352,7 +356,9 @@ export default function Header({ handleChangeFocus }) {
                     ? (isVisible ? year || undefined : seasonYear)
                     : undefined)
                 : undefined, isAdult, sort: sortArray === "" ? sorter : sortArray, format: format || undefined, genreIn: genres.length > 0 ? genres : undefined
-        }
+        },
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
 
     const handleScroll = () => {
@@ -415,15 +421,22 @@ export default function Header({ handleChangeFocus }) {
             isAdult, sort: sortArray === "" ? sorter : sortArray, type: type,
             countryOfOrigin: countryOfOrigin || undefined,
             status: statusSearch || undefined,
-        }
+        },
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
 
-    const { data: dataGenres, error: errorGenres, loading: loadingGenres } = useQuery(GET_COLLECTION)
+    const { data: dataGenres, error: errorGenres, loading: loadingGenres } = useQuery(GET_COLLECTION, {
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
+    })
 
 
 
     const { data: nextData, loading: nextLoading, error: nextError } = useQuery(GET_MEDIA, {
-        variables: { isAdult, sort: sortArray === "" ? sorter : sortArray, season: seasonNext, seasonYear: seasonNextYear, status, format: formatPopular }
+        variables: { isAdult, sort: sortArray === "" ? sorter : sortArray, season: seasonNext, seasonYear: seasonNextYear, status, format: formatPopular },
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
 
 

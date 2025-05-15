@@ -78,7 +78,9 @@ export default function NextSeason() {
     const pathname = usePathname();
 
     const { data, loading, error } = useQuery(GET_DATA, {
-        variables: { isAdult, type, season: seasonNext, seasonYear }
+        variables: { isAdult, type, season: seasonNext, seasonYear },
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     })
 
 

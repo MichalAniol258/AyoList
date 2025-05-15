@@ -27,7 +27,13 @@ function makeClient() {
     });
 
     return new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new InMemoryCache({
+            typePolicies: {
+                Media: {
+                    keyFields: ['id'],
+                },
+            },
+        }),
         link: authLink.concat(httpLink),
     });
 }

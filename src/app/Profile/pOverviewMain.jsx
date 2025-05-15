@@ -64,7 +64,9 @@ export default function POverviewMain() {
       perPage: 20,
       userId: userInfo?.id, // ID użytkownika
       sort: "ID_DESC"
-    }
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   });
 
   const handleScroll = () => {

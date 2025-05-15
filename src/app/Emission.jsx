@@ -42,7 +42,9 @@ export default function Emission() {
     const pathname = usePathname();
 
     const { data, loading, error } = useQuery(GET_DATA, {
-        variables: { type, sort, status, isAdult }
+        variables: { type, sort, status, isAdult },
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
 
 

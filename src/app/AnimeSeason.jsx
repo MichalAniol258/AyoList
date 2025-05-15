@@ -97,7 +97,9 @@ export default function AnimeSeason() {
     const limit = isMobile ? 5 : undefined;
 
     const { data, loading, error } = useQuery(GET_MEDIA, {
-        variables: { season, seasonYear, isAdult, type }
+        variables: { season, seasonYear, isAdult, type },
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     })
 
     if (error) return <p>Something went wrong: {error.message}</p>;

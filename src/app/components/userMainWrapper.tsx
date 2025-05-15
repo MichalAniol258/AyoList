@@ -199,7 +199,9 @@ export const UserMainProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       name: userInfo?.name,
       mediaListCollectionType2: "MANGA",
       userName: userInfo?.name
-    }
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   });
 
   return (

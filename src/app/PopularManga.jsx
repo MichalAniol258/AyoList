@@ -79,7 +79,9 @@ export default function PopularManga() {
     const type = "MANGA"
 
     const { data, loading, error } = useQuery(GET_DATA, {
-        variables: { sort, isAdult, type }
+        variables: { sort, isAdult, type },
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
 
     function useWindowWidth() {

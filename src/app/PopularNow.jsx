@@ -52,7 +52,9 @@ export default function PopularNow() {
     const pathname = usePathname();
 
     const { data, loading, error } = useQuery(GET_DATA, {
-        variables: { sort, isAdult, type }
+        variables: { sort, isAdult, type },
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-first',
     });
 
 

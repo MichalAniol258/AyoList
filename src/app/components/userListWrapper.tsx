@@ -96,11 +96,15 @@ export const UserListProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Pobranie danych z API GraphQL
   const { data: userList, error: userErrorList, loading: userLoadingList, refetch } = useQuery(GET_MEDIA_PROVIDER, {
-    variables: { userId: userInfo?.id, type: "ANIME", sort: undefined }
+    variables: { userId: userInfo?.id, type: "ANIME", sort: undefined },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   });
 
   const { data: userListManga } = useQuery(GET_MEDIA_PROVIDER, {
-    variables: { userId: userInfo?.id, type: "MANGA", sort: undefined }
+    variables: { userId: userInfo?.id, type: "MANGA", sort: undefined },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   });
 
   return (

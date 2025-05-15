@@ -157,13 +157,19 @@ export default function NavPc() {
   const [showResults, setResults] = useState(false)
   const isAdult = false;
 
-  const [SearchAnime, { loading, data, error }] = useLazyQuery(SEARCH_ANIME);
+  const [SearchAnime, { loading, data, error }] = useLazyQuery(SEARCH_ANIME, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const animePath = "/anime/";
   const mangaPath = "/manga/";
-  const [SearchManga, { loading: loadingManga, data: dataManga, error: errorManga }] = useLazyQuery(SEARCH_ANIME);
+  const [SearchManga, { loading: loadingManga, data: dataManga, error: errorManga }] = useLazyQuery(SEARCH_ANIME, {
+    fetchPolicy: 'cache-and-network',
+  });
 
-  const [SearchCharacters, { loading: loadingCharacters, data: dataCharacters, error: errorCharacters }] = useLazyQuery(SEARCH_CHARACTERS);
+  const [SearchCharacters, { loading: loadingCharacters, data: dataCharacters, error: errorCharacters }] = useLazyQuery(SEARCH_CHARACTERS, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const debounce = (func, delay) => {
     let timeoutId;

@@ -188,7 +188,9 @@ export const UserActivityProvider: React.FC<{ children: React.ReactNode }> = ({ 
       name: userInfo?.name,
       genresSort2: ["COUNT_DESC"],
       genresSort3: ["COUNT_DESC"]
-    }
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   });
 
   return (

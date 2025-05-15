@@ -645,7 +645,9 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
     variables: {
       mediaId: id, language: "JAPANESE", userId: userInfo?.id, mediaListCollectionUserId2: userInfo?.id, type: "ANIME", isMain: true, version: 2, role: undefined, sort: "ID", staffSort2: "RELEVANCE", recommendationsSort2: 'RATING_DESC',
 
-    }
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   });
 
 
@@ -659,21 +661,29 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
       staffPage2: 1,
       staffPerPage2: 20, mediaId: id, language: selectedValue, userId: userInfo?.id, mediaTrendMediaId2: id, mediaListCollectionUserId2: userList2?.Following?.id, type: "ANIME", isMain: true, version: 2, role: undefined, sort: "ID", staffSort2: "RELEVANCE", recommendationsSort2: 'RATING_DESC',
 
-    }
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   });
 
 
   const { data: userTrend } = useQuery(MediaTrend, {
     variables: {
       mediaId: id
-    }
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   });
 
   const { loading: loadingMedia, data: mediaData } = useQuery(GET_ANIME_DETAILS, {
     variables: { mediaId: id },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   });
   const { data: user, loading: userLoading3 } = useQuery(MEDIA_INFO, {
-    variables: { mediaId: id, isMain: false, version: 2 }
+    variables: { mediaId: id, isMain: false, version: 2 },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
   });
 
   const loadMoreRecommendations = () => {

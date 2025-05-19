@@ -3,7 +3,7 @@ import Nav from "../nav.jsx"
 import ProfileHeader from "./profileHeader.jsx"
 import ProfileMain from "./profileMain.jsx"
 import NavPc from "../navPc.jsx"
-
+import React from "react"
 
 
 

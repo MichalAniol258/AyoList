@@ -193,6 +193,8 @@ export const UserMainProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const { userInfo } = useUser() as UserHookReturn;
 
+
+
   // Pobranie danych z API GraphQL
   const { data: userData, error: userError, loading: userLoading } = useQuery(GET_MEDIA, {
     variables: {
@@ -200,9 +202,12 @@ export const UserMainProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       mediaListCollectionType2: "MANGA",
       userName: userInfo?.name
     },
+    skip: !userInfo,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
   });
+
+  if (!userInfo) return null;
 
   return (
     <UserContext.Provider value={{ userData, userError, userLoading }}>

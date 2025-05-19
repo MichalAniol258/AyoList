@@ -8,7 +8,7 @@ export default function ProfileHeader() {
   const { userInfo } = useUser();
 
 
-
+  if (!userInfo) return  null;
 
 
 

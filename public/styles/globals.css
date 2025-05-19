@@ -1717,6 +1717,7 @@ body:has(.container) {
   display: grid;
   grid-column-gap: 30px;
   grid-template-columns: 215px auto;
+  overflow: visible;
 }
 
 .cover-wrap {

@@ -389,21 +389,21 @@ export default function PAnimeListMain() {
                     ).length;
                     return formatAcc;
                 }, {}),
-     
+
                 statuses: statusList2.reduce((statusAcc, { key }) => {
                     statusAcc[key] = entries.filter(
                         (entry) => entry.status === status && entry.media?.status === key
                     ).length;
                     return statusAcc;
                 }, {}),
-     
+
                 genres: genresList.reduce((genresAcc, { key }) => {
                     genresAcc[key] = entries.filter(
                         (entry) => entry.status === status && entry.media?.genres === key
                     ).length;
                     return genresAcc
                 }, {}),
-     
+
                 countries: countryList.reduce((countryAcc, { key }) => {
                     countryAcc[key] = entries.filter(
                         (entry) => entry.status === status && entry.media?.countryOfOrigin === key
@@ -413,8 +413,8 @@ export default function PAnimeListMain() {
             };
             return acc;
         }, {});
-     
-     
+
+
     */
 
 
@@ -647,19 +647,19 @@ export default function PAnimeListMain() {
 
 
     const [saveMediaListEntry] = useMutation(SAVE_MEDIA_LIST_ENTRY, {
-        refetchQueries: [{ query: GET_MEDIA_PROVIDER, variables: { userId: userInfo?.id, type: pathname === "/Profile/Animelist" ? 'ANIME' : 'MANGA', sort: undefined } }],
+        refetchQueries: [{ query: GET_MEDIA_PROVIDER, variables: { userId: userInfo?.id, type: pathname === "/Profile/Animelist" ? 'ANIME' : 'MANGA', sort: undefined }, skip: !userInfo, }],
     });
 
     const [saveProgress] = useMutation(SAVE_PROGRESS, {
-        refetchQueries: [{ query: GET_MEDIA_PROVIDER, variables: { userId: userInfo?.id, type: pathname === "/Profile/Animelist" ? 'ANIME' : 'MANGA', sort: undefined } }],
+        refetchQueries: [{ query: GET_MEDIA_PROVIDER, variables: { userId: userInfo?.id, type: pathname === "/Profile/Animelist" ? 'ANIME' : 'MANGA', sort: undefined }, skip: !userInfo, }],
     });
 
     const [saveFavourite] = useMutation(SAVE_FAVOURITE, {
-        refetchQueries: [{ query: GET_MEDIA_PROVIDER, variables: { userId: userInfo?.id, type: pathname === "/Profile/Animelist" ? 'ANIME' : 'MANGA', sort: undefined } }],
+        refetchQueries: [{ query: GET_MEDIA_PROVIDER, variables: { userId: userInfo?.id, type: pathname === "/Profile/Animelist" ? 'ANIME' : 'MANGA', sort: undefined },     skip: !userInfo, }],
     })
 
     const [deleteMedia] = useMutation(DELETE_MEDIA_LIST_ENTRY, {
-        refetchQueries: [{ query: GET_MEDIA_PROVIDER, variables: { userId: userInfo?.id, type: pathname === "/Profile/Animelist" ? 'ANIME' : 'MANGA', sort: undefined } }],
+        refetchQueries: [{ query: GET_MEDIA_PROVIDER, variables: { userId: userInfo?.id, type: pathname === "/Profile/Animelist" ? 'ANIME' : 'MANGA', sort: undefined },     skip: !userInfo, }],
     })
 
 

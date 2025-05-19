@@ -2,6 +2,7 @@
 import { createContext, useContext, useState } from "react";
 import { useUser } from "../components/userInfoWrapper";
 import { gql, useQuery } from "@apollo/client";
+import React from "react";
 
 const GET_MEDIA = gql`
 query Query(
@@ -189,9 +190,12 @@ export const UserActivityProvider: React.FC<{ children: React.ReactNode }> = ({ 
       genresSort2: ["COUNT_DESC"],
       genresSort3: ["COUNT_DESC"]
     },
+    skip: !userInfo,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
   });
+
+  if (!userInfo) return null;
 
   return (
     <UserContext.Provider value={{ userActivityInfo, setUserActivityInfo, userData, userError, userLoading }}>

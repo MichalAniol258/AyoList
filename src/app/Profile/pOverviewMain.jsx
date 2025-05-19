@@ -62,12 +62,14 @@ export default function POverviewMain() {
     variables: {
       page: 1,
       perPage: 20,
-      userId: userInfo?.id, // ID użytkownika
+      userId: userInfo?.id,
       sort: "ID_DESC"
     },
+    skip: !userInfo,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
   });
+
 
   const handleScroll = () => {
     if (pathname.includes("/Profile/")) {
@@ -131,6 +133,7 @@ export default function POverviewMain() {
   const manga = userData?.User?.statistics?.manga || [];
   const activities = activityData?.Page?.activities || [];
 
+
   let totalRead = manga.chaptersRead
   let totalWatched = (anime.minutesWatched / 1440).toFixed(1);
   let dolnaGranicaAnime, nastepnyPrzedzial1Anime, nastepnyPrzedzial2Anime;
@@ -193,7 +196,7 @@ export default function POverviewMain() {
   if (activityError) return <p>Error: {activityError.message}</p>;
 
 
-
+  if (!userInfo) return  null;
 
   if (userLoading) {
     return <div className="rotating"><div className="rotating-text">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀

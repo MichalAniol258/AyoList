@@ -2,7 +2,7 @@
 import { createContext, useContext } from "react";
 import { useUser } from "./userInfoWrapper";
 import { gql, useQuery } from "@apollo/client";
-
+import React from "react";
 const GET_MEDIA_PROVIDER = gql`
 query ($userId: Int, $type: MediaType, $format: ScoreFormat, $sort: [MediaListSort]) {
   MediaListCollection(userId: $userId, type: $type, sort: $sort) {
@@ -97,15 +97,19 @@ export const UserListProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Pobranie danych z API GraphQL
   const { data: userList, error: userErrorList, loading: userLoadingList, refetch } = useQuery(GET_MEDIA_PROVIDER, {
     variables: { userId: userInfo?.id, type: "ANIME", sort: undefined },
+    skip: !userInfo,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
   });
 
   const { data: userListManga } = useQuery(GET_MEDIA_PROVIDER, {
     variables: { userId: userInfo?.id, type: "MANGA", sort: undefined },
+    skip: !userInfo,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
   });
+
+  if (!userInfo) return null;
 
   return (
     <UserContext.Provider value={{ GET_MEDIA_PROVIDER, userListManga, userList, userErrorList, userLoadingList, refetch }}>

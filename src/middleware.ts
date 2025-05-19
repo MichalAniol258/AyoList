@@ -51,8 +51,8 @@ export async function middleware(req: NextRequest) {
             const data = await res.json();
             const userData = data.data.Viewer;
 
-            const response = NextResponse.next();
-            response.cookies.set('userInfo', JSON.stringify(userData), { httpOnly: false, secure: true });
+            const response = NextResponse.redirect(req.nextUrl);
+            response.cookies.set('userInfo', JSON.stringify(userData), { httpOnly: false, secure: true, path: '/', });
 
             return response;
         } catch (error) {

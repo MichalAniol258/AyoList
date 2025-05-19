@@ -225,7 +225,7 @@ export default function NavPc() {
     }
   };
 
-
+  if (!userInfo) return  null;
 
   const params = new URLSearchParams({search: query, type: "Anime"}).toString();
   const paramsManga = new URLSearchParams({search: query, type: "Manga"}).toString();

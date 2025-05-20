@@ -17,6 +17,7 @@ import type { Viewport } from 'next';
 import SessionWrapper from "./components/SessionWrapper";
 import { UserProvider } from "./components/userInfoWrapper";
 import {QueryProvider} from "@/src/app/components/queryProvider";
+import {BrowseProvider} from "@/src/app/components/BrowseProvider";
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -70,7 +71,9 @@ export default function RootLayout({
           <SessionWrapper>
             <ApolloWrapper>
               <QueryProvider>
-                {children}
+                <BrowseProvider>
+                  {children}
+                </BrowseProvider>
               </QueryProvider>
             </ApolloWrapper>
           </SessionWrapper>

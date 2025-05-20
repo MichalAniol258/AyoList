@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import {useBrowseContext} from "@/src/app/components/BrowseProvider";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { usePathname } from "next/navigation";
 import { useRouter } from 'next/navigation';
@@ -11,164 +11,26 @@ import { Tooltip } from "@heroui/react";
 import {useMediaQuery} from "@mantine/hooks";
 
 
-const SEARCH_ANIME = gql`
-query SearchAnime(
-  $countryOfOrigin: CountryCode,
-  $type: MediaType, 
-  $search: String, 
-  $isAdult: Boolean, 
-  $genreIn: [String], 
-  $seasonYear: Int, 
-  $season: MediaSeason, 
-  $format: MediaFormat,
-  $status: MediaStatus
-) {
-  Page {
-    media(
-      countryOfOrigin: $countryOfOrigin
-      type: $type, 
-      search: $search, 
-      isAdult: $isAdult, 
-      genre_in: $genreIn, 
-      seasonYear: $seasonYear, 
-      season: $season, 
-      format: $format,
-      status: $status
-    ) {
-      id
-      title {
-        romaji
-        english
-      }
-      coverImage {
-        extraLarge
-      }
-        nextAiringEpisode {
-        episode
-        airingAt
-      }
-      meanScore
-      averageScore
-      format
-      genres
-      episodes
-      endDate {
-        year
-      }
-      startDate {
-        year
-      }
-      duration
-      chapters
-      studios (isMain: true) {
-        edges {
-          node {
-            name
-          }
-        }
-      }
-      status
-      season
-      seasonYear
-    }
-  }
-}
-`;
-
-
-const GET_MEDIA = gql`
-query Query(
-  $status: MediaStatus,
-  $season: MediaSeason,
-  $genreIn: [String],
-  $seasonYear: Int,
-  $isAdult: Boolean,
-  $sort: [MediaSort],
-  $format: MediaFormat,
-  $countryOfOrigin: CountryCode,
-  $type: MediaType, 
-  $page: Int,
-  $perPage: Int
-) {
-  Page(page: $page, perPage: $perPage) {
-    media(
-      countryOfOrigin: $countryOfOrigin,
-      type: $type, 
-      status: $status,
-      isAdult: $isAdult,
-      season: $season,
-      genre_in: $genreIn,
-      seasonYear: $seasonYear,
-      sort: $sort,
-      format: $format
-    ) {
-      id
-      title {
-        romaji
-        english
-      }
-      description
-      episodes
-      coverImage {
-        medium
-        extraLarge
-      }
-      nextAiringEpisode {
-        episode
-        airingAt
-      }
-      meanScore
-      averageScore
-      format
-      genres
-      episodes
-      endDate {
-        year
-      }
-      startDate {
-        year
-      }
-      duration
-      chapters
-      studios (isMain: true) {
-        edges {
-          node {
-            name
-          }
-        }
-      }
-      status
-      season
-      seasonYear
-    }
-    pageInfo {
-      currentPage
-      lastPage
-      hasNextPage
-    }
-  }
-}
-`;
-
-
-const GET_COLLECTION = gql`
-  query Query {
-    GenreCollection
-  }
-`;
-
-
-
 
 export default function Header({ handleChangeFocus }) {
+
+    const {   searchAnime, data, error, loading,
+        PopularData, PopularLoading, PopularError,
+        seasonalData, seasonalLoading, seasonalError,
+        allTimeData, allTimeLoading, allTimeError,
+        dataGenres, errorGenres, loadingGenres,
+        nextData, nextLoading, nextError,
+        fetchMore, setVisible, setSelectedKeys,
+        selectedKeys, nextYear, season,
+        seasonYear, seasonNext, seasonNextYear, clearTag, isVisible,
+        sortArray, type, format, statusSearch, countryOfOrigin, genres, year, season2,} = useBrowseContext();
+
     const router = useRouter();
 
     const [focus, setFocus] = useState(false);
     const [query, setQuery] = useState("");
-    const [isVisible, setVisible] = useState(false)
-    const [searchAnime, { data, error, loading }] = useLazyQuery(SEARCH_ANIME, {
-        fetchPolicy: 'cache-and-network',
-    })
+
+
     const [showResults, setResults] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const isAdult = false;
@@ -177,16 +39,7 @@ export default function Header({ handleChangeFocus }) {
     const search = searchParams.get("search")
     const type2 = searchParams.get("type")
 
-    const [selectedKeys, setSelectedKeys] = useState({
-        format: new Set([""]),
-        season: new Set([""]),
-        year: new Set([""]),
-        genres: new Set([""]),
-        typeSearch: new Set(["Anime"]),
-        country: new Set([""]),
-        status: new Set([""]),
-        sort: new Set([""])
-    });
+
 
     const handleFocus = (isFocused) => {
         setFocus(isFocused)
@@ -225,141 +78,16 @@ export default function Header({ handleChangeFocus }) {
 
 
 
-    let currentMonth = new Date().getMonth();
-    let currentYear = new Date().getFullYear();
 
 
 
-    // Określamy sezon na podstawie miesiąca
-    let season = '';
-    let seasonYear = currentYear
-    if (currentMonth >= 12 || currentMonth <= 2) {
-        season = 'WINTER';
-    } else if (currentMonth >= 3 && currentMonth <= 5) {
-        season = 'SPRING';
-    } else if (currentMonth >= 6 && currentMonth <= 8) {
-        season = 'SUMMER';
-    } else if (currentMonth >= 9 && currentMonth <= 11) {
-        season = 'FALL';
-    }
-
-    let sorter = "TRENDING_DESC"
-    const status = "NOT_YET_RELEASED"
-    const formatPopular = "TV"
-
-    const genres = Array.from(selectedKeys.genres)
-        .filter((genre) => genre.trim() !== "")
-        .map((genre) => genre.replaceAll("_ ", " "))
-
-
-    const year = Array.from(selectedKeys.year)
-        .filter((year) => year !== "")
-        .map((year) => year.replaceAll("_ ", " "))
-        .join(", ");
-
-    const season2 = Array.from(selectedKeys.season)
-        .filter((season) => season !== "")
-        .map((season) => season.toUpperCase().replace(" ", "_"))
-        .join(", ");
+    const pathname = usePathname() || "/";
 
 
 
-    const statusSearch = Array.from(selectedKeys.status)
-        .filter((status) => status !== "")
-        .map((status) => status.toUpperCase().replaceAll(" ", "_"))
-        .join(", ");
-
-    const countryOfOrigin = Array.from(selectedKeys.country)
-        .filter((country) => country !== "")
-        .map((country) =>
-            country
-                .replace("Japan", "JP")
-                .replace("Taiwan", "TW")
-                .replace("South Korea", "KR")
-                .replace("China", "CN")
-        )
-        .join(", ");
-
-    const sortArray = Array.from(selectedKeys.sort)
-        .filter((sort) => sort !== "")
-        .map((sort) =>
-            sort
-                .replace("Popularity", "POPULARITY_DESC")
-                .replace("Trending", "TRENDING_DESC")
-                .replace("Release Date", "START_DATE_DESC")
-                .replace("Average Score", "SCORE_DESC")
-        )
-        .join(", ");
-
-
-    console.log(sortArray)
-
-    const format = Array.from(selectedKeys.format)
-        .filter((format) => format !== "")
-        .map((format) => format.toUpperCase().replace(" ", "_")) // Dopasowanie do formatów enumów
-        .join(", ");
-
-    const type = Array.from(selectedKeys.typeSearch)
-        .filter((typeSearch) => typeSearch !== "")
-        .map((typeSearch) => typeSearch.toUpperCase().replace(" ", "_"))
-        .join(", ");
-
-    const { data: PopularData, loading: PopularLoading, error: PopularError } = useQuery(GET_MEDIA, {
-        variables: {
-            isAdult, sort: sortArray === "" ? sorter : sortArray, type: type,
-            countryOfOrigin: countryOfOrigin || undefined,
-            status: statusSearch || undefined,
-        },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    });
-
-    sorter = "POPULARITY_DESC"
-
-    const clearTag = Object.values(selectedKeys).reduce((acc, set) => acc + Array.from(set).filter((item) => item !== "").length, 0)
-
-    let pathname = usePathname() || "/";
-    if (pathname.includes("/Browse/popularAll")) {
-        sorter = "TRENDING_DESC"
-    } else if (pathname.includes("/Browse/")) {
-        sorter = "POPULARITY_DESC"
-    }
-
-    const nextYear = new Date().getFullYear();
 
     const years = Array.from({ length: nextYear - 1960 + 1 }, (_, i) => nextYear - i);
 
-    let seasonNextYear = nextYear
-    let seasonNext = ''
-    if (season === "WINTER") {
-        seasonNext = "SPRING"
-    } else if (season === "SPRING") {
-        seasonNext = "SUMMER"
-    } else if (season === "SUMMER") {
-        seasonNext = "FALL"
-    }
-    const { data: seasonalData, loading: seasonalLoading, error: seasonalError, fetchMore } = useQuery(GET_MEDIA, {
-        variables: {
-            page: 1,
-            perPage: 20,
-            type: type,
-            countryOfOrigin: !selectedKeys.typeSearch.has("Anime") ? (clearTag > 1 && selectedKeys.typeSearch.has("Manga")
-                ? (countryOfOrigin || undefined) :
-                "KR") : (countryOfOrigin || undefined),
-
-            status: statusSearch || undefined, season: !pathname.includes("/Browse/alltimeAll")
-                ? (selectedKeys.typeSearch.has("Anime")
-                    ? (isVisible ? season2 || undefined : season)
-                    : undefined)
-                : undefined, seasonYear: !pathname.includes("/Browse/alltimeAll")
-                ? (selectedKeys.typeSearch.has("Anime")
-                    ? (isVisible ? year || undefined : seasonYear)
-                    : undefined)
-                : undefined, isAdult, sort: sortArray === "" ? sorter : sortArray, format: format || undefined, genreIn: genres.length > 0 ? genres : undefined
-        },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    });
 
     const handleScroll = () => {
         if (pathname.includes("/Browse/")) {
@@ -416,28 +144,7 @@ export default function Header({ handleChangeFocus }) {
     }, [seasonalData, seasonalLoading]);
 
 
-    const { data: allTimeData, loading: allTimeLoading, error: allTimeError } = useQuery(GET_MEDIA, {
-        variables: {
-            isAdult, sort: sortArray === "" ? sorter : sortArray, type: type,
-            countryOfOrigin: countryOfOrigin || undefined,
-            status: statusSearch || undefined,
-        },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    });
 
-    const { data: dataGenres, error: errorGenres, loading: loadingGenres } = useQuery(GET_COLLECTION, {
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    })
-
-
-
-    const { data: nextData, loading: nextLoading, error: nextError } = useQuery(GET_MEDIA, {
-        variables: { isAdult, sort: sortArray === "" ? sorter : sortArray, season: seasonNext, seasonYear: seasonNextYear, status, format: formatPopular },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    });
 
 
     const formatTab = [
@@ -783,7 +490,7 @@ export default function Header({ handleChangeFocus }) {
         }
 
 
-        console.log(statusSearch)
+
     }, 300);
 
     const handleChange = (e) => {
@@ -888,7 +595,7 @@ export default function Header({ handleChangeFocus }) {
 
 
 
-    console.log(clearTag)
+
 
     useEffect(() => {
 
@@ -1071,7 +778,7 @@ export default function Header({ handleChangeFocus }) {
 
 
 
-    console.log(selectedKeys.country)
+
 
 
     const handleSelectionChange = (key, newSelectedKey) => {
@@ -1104,9 +811,9 @@ export default function Header({ handleChangeFocus }) {
 
 
     const { typeSearch, sort, ...restOfSelectedKeys } = selectedKeys;
-
     console.log(typeSearch);
     console.log(sort);
+
     const hasVisibleTags = Object.values(restOfSelectedKeys).reduce((acc, set) => acc + Array.from(set).filter((item) => item !== "").length, 0)
     const handleRemoveTag = (key, value) => {
         setSelectedKeys((prev) => {
@@ -1879,7 +1586,7 @@ c-760 -760 -982 -987 -997 -1022 -14 -30 -21 -67 -21 -110 0 -103 29 -153 168
                                 );
                             })}
                             <div className="barValue" color="secondary">
-                                6
+
                             </div>
                         </div>
 

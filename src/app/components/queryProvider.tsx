@@ -515,7 +515,7 @@ export const QueryProvider = ({children}:{children:React.ReactNode}) => {
 
 
     let season = '';
-    const seasonYear = currentYear
+    const seasonYear = currentYear;
     if (currentMonth >= 12 || currentMonth <= 2) {
         season = 'WINTER';
     } else if (currentMonth >= 3 && currentMonth <= 5) {

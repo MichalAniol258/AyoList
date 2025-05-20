@@ -332,8 +332,7 @@ export const BrowseProvider = ({children}:{children:React.ReactNode}) => {
                     : undefined)
                 : undefined, isAdult, sort: sortArray === "" ? sorter : sortArray, format: format || undefined, genreIn: genres.length > 0 ? genres : undefined
         },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
+        fetchPolicy: 'no-cache',
     });
 
     const { data: allTimeData, loading: allTimeLoading, error: allTimeError } = useQuery(GET_MEDIA, {

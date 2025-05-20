@@ -9,7 +9,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from "next/link";
 import { Tooltip } from "@heroui/react";
 import {useMediaQuery} from "@mantine/hooks";
-
+import {useCallback} from "react";
 
 
 export default function Header({ handleChangeFocus }) {
@@ -89,7 +89,41 @@ export default function Header({ handleChangeFocus }) {
     const years = Array.from({ length: nextYear - 1960 + 1 }, (_, i) => nextYear - i);
 
 
-    const handleScroll = () => {
+
+
+
+    const loadMore = useCallback(() => {
+        if (!seasonalLoading && seasonalData?.Page?.pageInfo?.hasNextPage) {
+            setIsLoading(true);
+            fetchMore({
+                variables: {
+                    page: seasonalData.Page.pageInfo.currentPage + 1
+                },
+                updateQuery: (previousResult, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) return previousResult;
+
+                    const mergedMedia = [
+                        ...previousResult.Page.media,
+                        ...fetchMoreResult.Page.media.filter((newItem) =>
+                            !previousResult.Page.media.some((oldItem) => oldItem.id === newItem.id)
+                        )
+                    ];
+
+                    return {
+                        ...fetchMoreResult,
+                        Page: {
+                            ...fetchMoreResult.Page,
+                            media: mergedMedia
+                        }
+                    };
+                }
+            }).finally(() => setIsLoading(false));
+        }
+    }, [seasonalLoading, seasonalData]);
+
+
+
+    const handleScroll = useCallback(() => {
         if (pathname.includes("/Browse/")) {
             if (
                 window.innerHeight + document.documentElement.scrollTop >=
@@ -98,51 +132,14 @@ export default function Header({ handleChangeFocus }) {
                 loadMore();
             }
         }
-    };
+    }, [pathname, loadMore]);
 
-
-    const loadMore = () => {
-        if (!seasonalLoading && seasonalData?.Page?.pageInfo?.hasNextPage) {
-            setIsLoading(true)
-
-            fetchMore({
-                variables: {
-                    page: seasonalData.Page.pageInfo.currentPage + 1
-                },
-
-                updateQuery: (previousResult, { fetchMoreResult }) => {
-                    if (!fetchMoreResult) return previousResult;
-
-                    const mergedMedia = [
-                        ...previousResult.Page.media,
-                        ...fetchMoreResult.Page.media.filter((newItem) =>
-                            !previousResult.Page.media.some((oldItem) => oldItem.id === newItem.id))
-                    ]
-
-                    return {
-                        ...fetchMoreResult,
-                        Page: {
-                            ...fetchMoreResult.Page,
-                            media: mergedMedia
-                        }
-                    }
-                }
-            }).finally(() => {
-                setIsLoading(false)
-            })
-        }
-    }
-
-
-    // Dodanie event listenera do scrollowania
     useEffect(() => {
         if (pathname.includes("/Browse/")) {
             window.addEventListener("scroll", handleScroll);
             return () => window.removeEventListener("scroll", handleScroll);
         }
-
-    }, [seasonalData, seasonalLoading]);
-
+    }, [handleScroll, pathname]);
 
 
 

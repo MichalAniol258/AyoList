@@ -1,87 +1,23 @@
 "use client"
-import { gql, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-const GET_DATA = gql`
-query Query($type: MediaType, $startDate: FuzzyDateInt,$status: MediaStatus,$season: MediaSeason, $seasonYear: Int,$isAdult: Boolean) {
-  Page {
-    media(type: $type,startDate: $startDate,status: $status,isAdult: $isAdult,season: $season, seasonYear: $seasonYear, sort: [POPULARITY_DESC]) {
-      id
-      title {
-        romaji
-        english
-      }
-      description
-      episodes
-      coverImage {
-        medium
-        extraLarge
-        large
-      }
-      nextAiringEpisode {
-        episode
-        airingAt
-      }
-      meanScore
-      averageScore
-      format
-      genres
-      episodes
-        endDate {
-        year
-      }
-      startDate {
-        year
-      }
-      duration
-      chapters
-    }
-  }
-}
-
-`;
+import {useQueryContext} from "@/src/app/components/queryProvider";
 
 export default function NextSeason() {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    const isAdult = false;
-    const type = "ANIME"
-
-
-
-    // Określamy sezon na podstawie miesiąca
-    let season = '';
-    let seasonYear = currentYear
-    if (currentMonth >= 12 || currentMonth <= 2) {
-        season = 'WINTER';
-    } else if (currentMonth >= 3 && currentMonth <= 5) {
-        season = 'SPRING';
-    } else if (currentMonth >= 6 && currentMonth <= 8) {
-        season = 'SUMMER';
-    } else if (currentMonth >= 9 && currentMonth <= 11) {
-        season = 'FALL';
-    }
-
-    let seasonNext = '';
-    if (season === "WINTER") {
-        seasonNext = "SPRING"
-    } else if (season === "SPRING") {
-        seasonNext = "SUMMER"
-    } else if (season === "SUMMER") {
-        seasonNext = "FALL"
-    }
-
-
+    const {dataNext, loadingNext, errorNext} = useQueryContext();
     const pathname = usePathname();
+    const data = dataNext;
+    const loading = loadingNext;
+    const error = errorNext;
 
-    const { data, loading, error } = useQuery(GET_DATA, {
-        variables: { isAdult, type, season: seasonNext, seasonYear },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    })
+
+
+
+
+
 
 
     function useWindowWidth() {

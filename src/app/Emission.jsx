@@ -1,51 +1,16 @@
 "use client"
-
-import { gql, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-const GET_DATA = gql`
-query Query($status: MediaStatus, $sort: [MediaSort], $type: MediaType, $isAdult: Boolean){
-  Page {
-    media (status: $status, sort: $sort, type: $type, isAdult: $isAdult){
-      id
-      title {
-        romaji
-        english
-      }
-      coverImage {
-        large
-        extraLarge
-      }
-      nextAiringEpisode {
-      episode
-        airingAt
-      }
-      meanScore
-    }
-  }
-}
+import {useQueryContext} from "@/src/app/components/queryProvider";
 
-
-
-
-`;
 export default function Emission() {
-
-
-
-    const sort = "TRENDING_DESC"
-    const isAdult = false
-    const type = "ANIME"
-    const status = "RELEASING"
-
+    const {dataEmission, loadingEmission, errorEmission} = useQueryContext();
     const pathname = usePathname();
 
-    const { data, loading, error } = useQuery(GET_DATA, {
-        variables: { type, sort, status, isAdult },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    });
+    const data = dataEmission;
+    const loading = loadingEmission;
+    const error = errorEmission;
 
 
     function useWindowWidth() {

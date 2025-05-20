@@ -1,202 +1,15 @@
 "use client"
-
 import { motion } from "framer-motion"
 import Link from "next/link.js"
 import { usePathname } from "next/navigation.js"
 import {  useState } from "react"
-import { gql, useQuery } from "@apollo/client"
-import {LayoutContext} from "@/src/app/components/context";
-import { useUser } from "../../components/userInfoWrapper";
-const STATS_LIST = gql`
-query User($userId: Int, $sort: [UserStatisticsSort], $releaseYearsSort2: [UserStatisticsSort]) {
-  User(id: $userId) {
-    statistics {
-      anime {
-        count
-        episodesWatched
-        meanScore
-        standardDeviation
-        minutesWatched
-        statuses {
-          minutesWatched
-          status
-          chaptersRead
-          count
-          meanScore
-          mediaIds
-        }
-        scores {
-          score
-          minutesWatched
-          meanScore
-          count
-          chaptersRead
-          mediaIds
-        }
-        lengths {
-          length
-          chaptersRead
-          count
-          meanScore
-          mediaIds
-          minutesWatched
-        }
-        countries {
-          chaptersRead
-          count
-          country
-          meanScore
-          mediaIds
-          minutesWatched
-        }
-        formats {
-          chaptersRead
-          count
-          format
-          meanScore
-          mediaIds
-          minutesWatched
-        }
-        releaseYears(sort: $releaseYearsSort2) {
-          chaptersRead
-          count
-          meanScore
-          mediaIds
-          minutesWatched
-          releaseYear
-        }
-        startYears {
-          chaptersRead
-          count
-          meanScore
-          mediaIds
-          minutesWatched
-          startYear
-        }
-        genres {
-          chaptersRead
-          count
-          genre
-          meanScore
-          mediaIds
-          minutesWatched
-        }
-        staff {
-          chaptersRead
-          count
-          meanScore
-          mediaIds
-          minutesWatched
-        }
-        tags {
-          chaptersRead
-          count
-          meanScore
-          mediaIds
-          minutesWatched
-        }
-      }
-      manga {
-        count
-        chaptersRead
-        meanScore
-        standardDeviation
-        volumesRead
-        scores {
-          chaptersRead
-          count
-          meanScore
-          mediaIds
-          score
-          minutesWatched
-        }
-        lengths {
-          chaptersRead
-          count
-          length
-          meanScore
-          mediaIds
-          minutesWatched
-        }
-        formats {
-          chaptersRead
-          count
-          format
-          meanScore
-          mediaIds
-          minutesWatched
-        }
-        countries {
-          chaptersRead
-          count
-          country
-          meanScore
-          mediaIds
-          minutesWatched
-        }
-        statuses {
-          chaptersRead
-          count
-          meanScore
-          mediaIds
-          minutesWatched
-          status
-        }
-        releaseYears(sort: $sort) {
-          chaptersRead
-          count
-          meanScore
-          mediaIds
-          minutesWatched
-          releaseYear
-        }
-        startYears {
-          chaptersRead
-          count
-          meanScore
-          mediaIds
-          minutesWatched
-          startYear
-        }
-      }
-    }
-  }
-}`
+import React from "react"
 
-
-const MediaList = gql`
-query Query($userId: Int, $type: MediaType) {
-  MediaListCollection(userId: $userId, type: $type) {
-    lists {
-      entries {
-        media {
-          genres
-          coverImage {
-            extraLarge
-          }
-          type
-        }
-      }
-    }
-  }
-}`
 
 
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { userInfo } = useUser();
 
-  const { data: statsData, loading: statsLoading } = useQuery(STATS_LIST, {
-    variables: {
-      userId: userInfo?.id, sort: 'PROGRESS_DESC'
-    }
-  })
-
-  const { data: mediaData, loading: mediaLoading } = useQuery(MediaList, {
-    variables: {
-      userId: userInfo?.id, type: "ANIME",
-    }
-  })
 
 
 
@@ -359,9 +172,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             </div>
           </div>
-          <LayoutContext.Provider value={{ statsData, statsLoading, mediaData, mediaLoading }}>
             {children}
-          </LayoutContext.Provider>
         </div>
 
       </div>

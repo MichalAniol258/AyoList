@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-
+import {useQueryContext} from "@/src/app/components/queryProvider";
 
 
 import { Bar, BarChart, LabelList, XAxis } from "recharts"
@@ -110,8 +110,8 @@ const mangaSwitch = [
     }
 ]
 
-export default function PAnimeListMain({ statsData, statsLoading }) {
-
+export default function PAnimeListMain() {
+    const {statsData, statsLoading} = useQueryContext();
 
     let pathname = usePathname() || "/";
     const type = pathname.includes("/Profile/Stats/Anime/") ? 'anime' : 'manga';

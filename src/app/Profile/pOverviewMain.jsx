@@ -1,53 +1,10 @@
 "use client"
-import { gql, useQuery } from "@apollo/client";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useUser } from "../components/userInfoWrapper"
 import { useUserContext } from "../components/userMainWrapper"
 import Link from "next/link";
-
-const GET_ACTIVITY = gql`
-query Query($userId: Int, $sort: [ActivitySort], $page: Int, $perPage: Int) {
-  Page(page: $page, perPage: $perPage) {
-    activities(userId: $userId, sort: $sort) {
-      ... on ListActivity {
-        id
-        userId
-        type
-        replyCount
-        status
-        progress
-        isLocked
-        isSubscribed
-        likeCount
-        isLiked
-        isPinned
-        siteUrl
-        createdAt
-        user {
-          id
-          name
-        }
-        media {
-        type
-          title {
-            romaji
-            english
-          }
-          coverImage {
-            extraLarge
-          }
-          id
-        }
-      }
-    }
-    pageInfo {
-      hasNextPage
-      currentPage
-    }
-  }
-}
-`
+import {useQueryContext} from "@/src/app/components/queryProvider";
 
 
 
@@ -56,19 +13,10 @@ query Query($userId: Int, $sort: [ActivitySort], $page: Int, $perPage: Int) {
 export default function POverviewMain() {
   const { userInfo } = useUser();
   const { userData, userLoading } = useUserContext();
+  const {activityData, activityLoading, activityError, fetchMore} = useQueryContext();
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
-  const { data: activityData, error: activityError, loading: activityLoading, fetchMore } = useQuery(GET_ACTIVITY, {
-    variables: {
-      page: 1,
-      perPage: 20,
-      userId: userInfo?.id,
-      sort: "ID_DESC"
-    },
-    skip: !userInfo,
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-  });
+
 
 
   const handleScroll = () => {

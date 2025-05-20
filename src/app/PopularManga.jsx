@@ -1,88 +1,18 @@
 "use client"
-import { gql, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-const GET_DATA = gql`
-query SearchAnime(
-  $countryOfOrigin: CountryCode,
-  $type: MediaType, 
-  $search: String, 
-  $isAdult: Boolean, 
-  $genreIn: [String], 
-  $seasonYear: Int, 
-  $season: MediaSeason, 
-  $format: MediaFormat,
-  $status: MediaStatus,
-  $sort: [MediaSort]
-) {
-  Page {
-    media(
-      countryOfOrigin: $countryOfOrigin
-      type: $type, 
-      search: $search, 
-      isAdult: $isAdult, 
-      genre_in: $genreIn, 
-      seasonYear: $seasonYear, 
-      season: $season, 
-      format: $format,
-      status: $status,
-      sort: $sort
-    ) {
-      id
-      title {
-        romaji
-        english
-      }
-      coverImage {
-        extraLarge
-      }
-        nextAiringEpisode {
-        episode
-        airingAt
-      }
-      meanScore
-      averageScore
-      format
-      genres
-      episodes
-      endDate {
-        year
-      }
-      startDate {
-        year
-      }
-      duration
-      chapters
-      studios (isMain: true) {
-        edges {
-          node {
-            name
-          }
-        }
-      }
-      status
-      season
-      seasonYear
-    }
-  }
-}
-`;
+import {useQueryContext} from '@/src/app/components/queryProvider'
+
 export default function PopularManga() {
 
+    const {dataManga, loadingManga, errorManga} = useQueryContext();
+    const data = dataManga;
+    const loading = loadingManga;
+    const error = errorManga;
 
-
-    const sort = "TRENDING_DESC"
-    const isAdult = false
-    const type = "MANGA"
-
-    const { data, loading, error } = useQuery(GET_DATA, {
-        variables: { sort, isAdult, type },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    });
 
     function useWindowWidth() {
         const [windowWidth, setWindowWidth] = useState(

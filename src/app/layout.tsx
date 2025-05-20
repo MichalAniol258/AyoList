@@ -16,6 +16,8 @@ import { Inter } from "next/font/google";
 import type { Viewport } from 'next';
 import SessionWrapper from "./components/SessionWrapper";
 import { UserProvider } from "./components/userInfoWrapper";
+import {QueryProvider} from "@/src/app/components/queryProvider";
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -67,9 +69,9 @@ export default function RootLayout({
         <UserProvider>
           <SessionWrapper>
             <ApolloWrapper>
-
-              {children}
-
+              <QueryProvider>
+                {children}
+              </QueryProvider>
             </ApolloWrapper>
           </SessionWrapper>
         </UserProvider>

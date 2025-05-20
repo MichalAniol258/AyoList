@@ -2,48 +2,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import {useQueryContext} from "@/src/app/components/queryProvider";
 
 
-interface Genre {
-    genre: string;
-    minutesWatched: number;
-    meanScore: number;
-    count: number;
-}
 
-interface Anime {
-    genres: Genre[];
-}
-
-interface Manga {
-    genres: Genre[];
-}
-
-interface Statistics {
-    statistics: { anime: Anime; manga: Manga };
-}
-interface media {
-    coverImage: { extraLarge: string }
-    genres: string
-    type: string
-}
-interface entries {
-    media: media
-}
-
-interface lists {
-    entries: entries[]
-}
-
-interface MediaListCollection {
-    lists: lists[];
-}
-interface User {
-    User: Statistics;
-    MediaListCollection: MediaListCollection;
-}
-
-export default function StatsGenres({ statsData, statsLoading, mediaData, mediaLoading }: { statsData: User; statsLoading: boolean; mediaData: User; mediaLoading: boolean }) {
+export default function StatsGenres() {
+    const { statsData, statsLoading, mediaData, mediaLoading } = useQueryContext();
     const pathname = usePathname();
     const type = pathname.includes("/Profile/Stats/Anime/") ? 'anime' : 'manga';
     const statistics = statsData?.User?.statistics || [];

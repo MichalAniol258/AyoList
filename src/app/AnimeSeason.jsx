@@ -1,75 +1,25 @@
 "use client"
-
-import { gql, useQuery } from "@apollo/client";
+import {useQueryContext} from "@/src/app/components/queryProvider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-const GET_MEDIA = gql`
-query Query($type: MediaType,$season: MediaSeason, $seasonYear: Int,$isAdult: Boolean) {
-  Page {
-    media(type: $type,isAdult: $isAdult,season: $season, seasonYear: $seasonYear, sort: [POPULARITY_DESC]) {
-      id
-      title {
-        romaji
-        english
-      }
-      description
-      episodes
-      coverImage {
-        medium
-        extraLarge
-      }
-      nextAiringEpisode {
-        episode
-        airingAt
-      }
-      meanScore
-      averageScore
-      format
-      genres
-      episodes
-        endDate {
-        year
-      }
-      startDate {
-        year
-      }
-      duration
-      chapters
-    }
-  }
-}
-
-`;
 
 
 
 
 
 export default function AnimeSeason() {
-
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    const isAdult = false;
-    const type = "ANIME"
-
-    // Określamy sezon na podstawie miesiąca
-    let season = '';
-    let seasonYear = currentYear
-    if (currentMonth >= 12 || currentMonth <= 2) {
-        season = 'WINTER';
-    } else if (currentMonth >= 3 && currentMonth <= 5) {
-        season = 'SPRING';
-    } else if (currentMonth >= 6 && currentMonth <= 8) {
-        season = 'SUMMER';
-    } else if (currentMonth >= 9 && currentMonth <= 11) {
-        season = 'FALL';
-
-    }
-
+    const {dataSeason, loadingSeason, errorSeason, season, seasonYear} = useQueryContext();
     const pathname = usePathname();
+    const data = dataSeason;
+    const loading = loadingSeason;
+    const error = errorSeason;
+
+
+
+
 
     function useWindowWidth() {
         const [windowWidth, setWindowWidth] = useState(
@@ -96,11 +46,7 @@ export default function AnimeSeason() {
     const isMobile = windowWidth >= 1024; // Próg dla urządzeń mobilnych, np. 768px
     const limit = isMobile ? 5 : undefined;
 
-    const { data, loading, error } = useQuery(GET_MEDIA, {
-        variables: { season, seasonYear, isAdult, type },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    })
+
 
     if (error) return <p>Something went wrong: {error.message}</p>;
 

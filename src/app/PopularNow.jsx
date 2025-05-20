@@ -1,61 +1,21 @@
 "use client"
-
-import { gql, useQuery } from "@apollo/client";
+import {useQueryContext} from "@/src/app/components/queryProvider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-const GET_DATA = gql`
-query Query($type: MediaType,$sort: [MediaSort], $startDate: FuzzyDateInt, $episodes: Int, $formatIn: [MediaFormat], $isAdult: Boolean) {
-  Page {
-    media(type: $type,sort: $sort, startDate: $startDate, episodes: $episodes,  isAdult: $isAdult, format_in: $formatIn) {
-      id
-      title {
-        romaji
-        english
-      }
-      description
-      coverImage {
-        large
-        extraLarge
-      }
-      nextAiringEpisode {
-        episode
-        airingAt
-      }
-      meanScore
-      averageScore
-      format
-      genres
-      episodes
-        endDate {
-        year
-      }
-      startDate {
-        year
-      }
-      duration
-      chapters
-    }
-  }
-}
-`;
+
 export default function PopularNow() {
-
-
-
-    const sort = "TRENDING_DESC"
-    const isAdult = false
-    const type = "ANIME"
-
+    const {dataPopular, loadingPopular, errorPopular} = useQueryContext();
     const pathname = usePathname();
 
-    const { data, loading, error } = useQuery(GET_DATA, {
-        variables: { sort, isAdult, type },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    });
+    const data = dataPopular;
+    const loading = loadingPopular;
+    const error = errorPopular;
+
+
+
 
 
     function useWindowWidth() {

@@ -119,7 +119,7 @@ export default function Header({ handleChangeFocus }) {
                 }
             }).finally(() => setIsLoading(false));
         }
-    }, [seasonalLoading, seasonalData]);
+    }, [seasonalLoading, seasonalData, fetchMore]);
 
 
 

@@ -5,7 +5,7 @@ import { useUser } from "../components/userInfoWrapper"
 import { useUserContext } from "../components/userMainWrapper"
 import Link from "next/link";
 import {useQueryContext} from "@/src/app/components/queryProvider";
-
+import {useCallback} from "react";
 
 
 
@@ -13,29 +13,18 @@ import {useQueryContext} from "@/src/app/components/queryProvider";
 export default function POverviewMain() {
   const { userInfo } = useUser();
   const { userData, userLoading } = useUserContext();
-  const {activityData, activityLoading, activityError, fetchMore} = useQueryContext();
+  const {activityData, activityLoading, activityError, fetchMoreActivity} = useQueryContext();
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
+  const fetchMore = fetchMoreActivity;
 
 
 
-  const handleScroll = () => {
-    if (pathname.includes("/Profile/")) {
-      if (
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - 200
-      ) {
-        loadMore();
-      }
-    }
-  };
 
 
-
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     if (!activityLoading && activityData?.Page?.pageInfo?.hasNextPage) {
       setIsLoading(true)
-
       fetchMore({
         variables: {
           page: activityData.Page.pageInfo.currentPage + 1
@@ -55,14 +44,24 @@ export default function POverviewMain() {
             }
           };
         }
-      }).catch((error) => {
-        console.error("Error loading more activities:", error);
-      }).finally(() => {
-        setIsLoading(false);
-      });
+      }).finally(() => setIsLoading(false));
 
     }
-  }
+  }, [activityData, activityLoading, fetchMore])
+
+
+
+
+  const handleScroll = useCallback(() => {
+    if (pathname.includes("/Profile/")) {
+      if (
+          window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.offsetHeight - 200
+      ) {
+        loadMore();
+      }
+    }
+  }, [pathname, loadMore]);
 
   // Dodanie event listenera do scrollowania
   useEffect(() => {
@@ -71,7 +70,7 @@ export default function POverviewMain() {
       return () => window.removeEventListener("scroll", handleScroll);
     }
 
-  }, [activityData, activityLoading]);
+  }, [handleScroll, pathname]);
 
 
 

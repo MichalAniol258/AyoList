@@ -662,8 +662,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
       staffPerPage2: 20, mediaId: id, language: selectedValue, userId: userInfo?.id, mediaTrendMediaId2: id, mediaListCollectionUserId2: userList2?.Following?.id, type: "ANIME", isMain: true, version: 2, role: undefined, sort: "ID", staffSort2: "RELEVANCE", recommendationsSort2: 'RATING_DESC',
 
     },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
+    fetchPolicy: 'no-cache',
   });
 
 

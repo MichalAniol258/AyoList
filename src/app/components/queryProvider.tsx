@@ -580,9 +580,7 @@ export const QueryProvider = ({children}:{children:React.ReactNode}) => {
             userId: userInfo?.id,
             sort: "ID_DESC"
         },
-        skip: !userInfo,
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
+        fetchPolicy: 'no-cache',
     });
 
     const { data: statsData, loading: statsLoading } = useQuery(STATS_LIST, {

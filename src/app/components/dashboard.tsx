@@ -5,10 +5,10 @@ const Dashboard = () => {
     const router = useRouter();
 
     /* const [userInfo, setUserInfo] = useState<UserInfo>(null);
- 
+
      useEffect(() => {
          const userInfoCookie = getCookie("userInfo");
- 
+
          if (userInfoCookie) {
              try {
                  const parsedUserInfo = JSON.parse(userInfoCookie as string);
@@ -30,7 +30,8 @@ const Dashboard = () => {
 
                 <button onClick={loginToAniList} className="buttonChuj">
                     <Image src={`/images/AniList_logo.png`} width={25} className="loginImg" height={25} alt="chu" unoptimized />
-                    Sign in with Anilist</button>
+                    Sign in with Anilist
+                </button>
             </div>
         </>
     );

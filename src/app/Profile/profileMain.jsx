@@ -20,6 +20,10 @@ const navItems = [
     path: "/Profile/Stats/Anime/Overview",
     name: "Stats"
   },
+  {
+    path: "/Profile/Settings",
+    name: "Settings"
+  }
 ]
 
 

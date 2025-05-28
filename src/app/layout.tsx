@@ -11,7 +11,7 @@ import "../../public/styles/login.css"
 import "../../public/styles/index.css"
 import { ApolloWrapper } from "./graphql/ApolloWraper";
 import { Inter } from "next/font/google";
-
+import React from "react";
 
 import type { Viewport } from 'next';
 import SessionWrapper from "./components/SessionWrapper";
@@ -60,8 +60,6 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/favicons/apple-touch-logo.png" sizes="180x180" />
         <link rel="icon" href="/favicons/android-chrome-192x192.png" sizes="192x192" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
-
-
       </head>
 
 

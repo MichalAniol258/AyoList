@@ -1,17 +1,24 @@
 "use client"
+import {useQueryContext} from "@/src/app/(main)/components/queryProvider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import {useQueryContext} from '@/src/app/components/queryProvider'
 
-export default function PopularManga() {
 
-    const {dataManga, loadingManga, errorManga} = useQueryContext();
-    const data = dataManga;
-    const loading = loadingManga;
-    const error = errorManga;
+
+
+
+export default function AnimeSeason() {
+    const {dataSeason, loadingSeason, errorSeason, season, seasonYear} = useQueryContext();
+    const pathname = usePathname();
+    const data = dataSeason;
+    const loading = loadingSeason;
+    const error = errorSeason;
+
+
+
 
 
     function useWindowWidth() {
@@ -34,16 +41,16 @@ export default function PopularManga() {
     }
 
 
+
     const windowWidth = useWindowWidth();
     const isMobile = windowWidth >= 1024; // Próg dla urządzeń mobilnych, np. 768px
     const limit = isMobile ? 5 : undefined;
 
-    const pathname = usePathname();
 
-    if (error) return <p>Something went wrong: {error.message}</p>
 
-    const media = data?.Page?.media;
+    if (error) return <p>Something went wrong: {error.message}</p>;
 
+    const media = data?.Page?.media || [];
 
     const svgItems = [
         {
@@ -63,6 +70,7 @@ export default function PopularManga() {
         }
     ]
 
+
     const content = (item) => {
         const airingAt = item.nextAiringEpisode?.airingAt;
         const timeUntilAiring = airingAt
@@ -70,6 +78,8 @@ export default function PopularManga() {
             : null;
 
         // Convert time into days, hours, and minutes
+
+
         const days = timeUntilAiring ? Math.floor(timeUntilAiring / 86400) : 0;
         const remainingSeconds = timeUntilAiring ? timeUntilAiring % 86400 : 0;
 
@@ -85,13 +95,14 @@ export default function PopularManga() {
         } else if (days === 0 && hours > 0) {
             czas_pozostaly = hours
             tekst_pozostaly = hours === 1 ? 'hour' : 'hours'
-        } else if (days === 0 && hours === 0 && minutes > 0) {
+        } else if (hours === 0 && minutes > 0) {
             czas_pozostaly = minutes
             tekst_pozostaly = minutes === 1 ? 'minute' : 'minutes'
         } else if (days === 0 && hours === 0 && minutes === 0 && seconds > 0) {
             czas_pozostaly = seconds
             tekst_pozostaly = seconds === 1 ? 'second' : 'seconds'
         }
+
         const movie = item.duration;
         const movieHours = Math.floor(movie / 60);
         const remainingMovie = movie % 60;
@@ -103,6 +114,8 @@ export default function PopularManga() {
 
         return (
             // Dodano return
+
+
             <div className="hover-data-right">
                 <div className="hover-header">
                     <div className="date airing">
@@ -114,13 +127,13 @@ export default function PopularManga() {
                                 ) : (
                                     (item.status === "RELEASING" && item.startDate?.year < 2000) ? (
 
-                                        <>{`Publishing Since ${item.startDate?.year}`}
+                                        <>{`Airing Since ${item.startDate?.year}`}
                                         </>
 
                                     ) : (
                                         <> {item.season
                                             ? `${item.season.charAt(0).toUpperCase()}${item.season.slice(1).toLowerCase()}`
-                                            : ""} {item.status !== "NOT_YET_RELEASED" ? `Publishing Since ${item.startDate?.year}` : `${item.startDate?.year}`}</>
+                                            : ""} {`${item.startDate?.year}`}</>
                                     )
 
 
@@ -131,7 +144,7 @@ export default function PopularManga() {
                             (item.endDate?.year ? // Jeśli anime zakończone i ma więcej niż 100 odcinków
                                 (item.episodes > 100 ? (<>{item.startDate?.year}-{item.endDate?.year}</>) : (<> {item.season
                                     ? `${item.season.charAt(0).toUpperCase()}${item.season.slice(1).toLowerCase()}`
-                                    : ""} {item.startDate?.year}-{item.endDate?.year}</>)) : // Jeśli brak informacji o sezonie i startDate
+                                    : ""} {`${item.startDate?.year}`}</>)) : // Jeśli brak informacji o sezonie i startDate
                                 (<>TBA</>))
                         )}
                     </div>
@@ -149,7 +162,7 @@ export default function PopularManga() {
                 </div>
                 <div className="hover-info">
                     <span>{filteredFormats}</span>
-                    <span className="separator">{item.episodes !== null && "•"}{(item.status === "FINISHED") && "• " + item.chapters + " chapters"}</span>
+                    <span className="separator">{item.episodes !== null && "•"}</span>
                     <span>
                         {item.episodes > 1 && item.episodes + " episodes "}
                         {(item.episodes === 1 && item.format !== "MOVIE") && " episode"}
@@ -171,16 +184,22 @@ export default function PopularManga() {
     };
 
     return (
-        <section className="sMain pokaz">
+
+        <section className={`sMain`}>
+
             <main>
+
                 <div className="showAll">
-                    <h2><span>Popular </span>Manga</h2>
-                    <Link href={"/Browse/popularManga"}>{!pathname.includes("/Browse/") && <p>View All</p>}</Link>
+                    <h2><span>{season} </span>{seasonYear} Anime</h2>
+                    <Link href={"/Browse/seasonalAll"}>{!pathname.includes("/Browse/") && <p>View All</p>}</Link>
 
 
 
                 </div>
+
                 <br />
+
+
 
                 <div className="resultsChuj">
 
@@ -209,8 +228,8 @@ export default function PopularManga() {
                                     }}
                                 >
                                     <motion.div className="media-card" key={item.id}>
-                                        <Link className="resultCover" href={`/manga/${item.id}`}>
-                                            <img className="resultImg" src={item.coverImage.extraLarge} alt={item.title.romaji} />
+                                        <Link className="resultCover" href={`/anime/${item.id}`}>
+                                            <img className="resultImg" src={item.coverImage.extraLarge} alt={item.title?.english === null ? item.title?.romaji : item.title?.english} />
                                         </Link>
 
                                         <Link href={`/anime/${item.id}`} className="resultTitle min-h-[46px]">
@@ -229,8 +248,11 @@ export default function PopularManga() {
                             )
                         })
                     )}
+
+
                 </div>
             </main>
-        </section>
+
+        </section >
     );
 }

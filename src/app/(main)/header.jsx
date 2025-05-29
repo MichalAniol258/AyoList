@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import {useBrowseContext} from "@/src/app/components/BrowseProvider";
+import {useBrowseContext} from "@/src/app/(main)/components/BrowseProvider";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { usePathname } from "next/navigation";
 import { useRouter } from 'next/navigation';

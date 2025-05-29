@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useState } from "react";
-import { useUser } from "../components/userInfoWrapper";
+import { useUser } from "@/src/app/(main)/components/userInfoWrapper";
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
 

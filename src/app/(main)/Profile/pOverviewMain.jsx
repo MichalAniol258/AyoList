@@ -1,10 +1,10 @@
 "use client"
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useUser } from "../components/userInfoWrapper"
-import { useUserContext } from "../components/userMainWrapper"
+import { useUser } from "@/src/app/(main)/components/userInfoWrapper"
+import { useUserContext } from "@/src/app/(main)/components/userMainWrapper"
 import Link from "next/link";
-import {useQueryContext} from "@/src/app/components/queryProvider";
+import {useQueryContext} from "@/src/app/(main)/components/queryProvider";
 import {useCallback} from "react";
 
 

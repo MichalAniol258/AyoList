@@ -1,7 +1,7 @@
 "use client"
 import { Tooltip } from "@heroui/react";
 import Link from "next/link";
-import { useUserContext } from "../components/userActivityWrapper"
+import { useUserContext } from "@/src/app/(main)/components/userActivityWrapper"
 
 
 

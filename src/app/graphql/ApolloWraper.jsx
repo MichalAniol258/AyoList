@@ -1,10 +1,8 @@
 "use client";
 import { HttpLink } from "@apollo/client";
 import { ApolloNextAppProvider, ApolloClient, InMemoryCache } from "@apollo/experimental-nextjs-app-support";
-import { UserActivityProvider } from "../components/userActivityWrapper";
-import { UserMainProvider } from "../components/userMainWrapper";
 import { setContext } from "@apollo/client/link/context";
-import { UserListProvider } from "../components/userListWrapper";
+
 import { getCookie } from 'cookies-next'
 function makeClient() {
     // Odczytanie ciasteczka z tokenem
@@ -35,13 +33,9 @@ function makeClient() {
 export function ApolloWrapper({ children }) {
     return (
         <ApolloNextAppProvider makeClient={makeClient}>
-            <UserActivityProvider>
-                <UserMainProvider>
-                    <UserListProvider>
+
                         {children}
-                    </UserListProvider>
-                </UserMainProvider>
-            </UserActivityProvider>
+
         </ApolloNextAppProvider>
     );
 }

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import {useQueryContext} from "@/src/app/components/queryProvider";
+import {useQueryContext} from "@/src/app/(main)/components/queryProvider";
 
 export default function Emission() {
     const {dataEmission, loadingEmission, errorEmission} = useQueryContext();

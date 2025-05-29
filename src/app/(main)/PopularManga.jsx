@@ -4,20 +4,14 @@ import { usePathname } from "next/navigation";
 import { Tooltip } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import {useQueryContext} from "@/src/app/components/queryProvider";
+import {useQueryContext} from '@/src/app/(main)/components/queryProvider'
 
-export default function NextSeason() {
-    const {dataNext, loadingNext, errorNext} = useQueryContext();
-    const pathname = usePathname();
-    const data = dataNext;
-    const loading = loadingNext;
-    const error = errorNext;
+export default function PopularManga() {
 
-
-
-
-
-
+    const {dataManga, loadingManga, errorManga} = useQueryContext();
+    const data = dataManga;
+    const loading = loadingManga;
+    const error = errorManga;
 
 
     function useWindowWidth() {
@@ -44,11 +38,12 @@ export default function NextSeason() {
     const isMobile = windowWidth >= 1024; // Próg dla urządzeń mobilnych, np. 768px
     const limit = isMobile ? 5 : undefined;
 
-    if (error) return <p>Rozjebalo sie cos: {error.message}</p>
+    const pathname = usePathname();
 
-
+    if (error) return <p>Something went wrong: {error.message}</p>
 
     const media = data?.Page?.media;
+
 
     const svgItems = [
         {
@@ -76,7 +71,6 @@ export default function NextSeason() {
 
         // Convert time into days, hours, and minutes
         const days = timeUntilAiring ? Math.floor(timeUntilAiring / 86400) : 0;
-
         const remainingSeconds = timeUntilAiring ? timeUntilAiring % 86400 : 0;
 
         const hours = Math.floor(remainingSeconds / 3600); // Liczba godzin
@@ -102,17 +96,7 @@ export default function NextSeason() {
         const movieHours = Math.floor(movie / 60);
         const remainingMovie = movie % 60;
         const formats = Array.isArray(item.format) ? item.format : [item.format];
-        const filteredFormats = formats
-            .filter((format) => format && format !== "") // Remove null, undefined, and empty strings
-            .map((format) =>
-                format
-                    .replace("ONE_SHOT", "One shot")
-                    .replace("MANGA", "Manga")
-                    .replace("TV", "TV Show")
-                    .replace("NOVEL", "Novel")
-            );
-
-
+        const filteredFormats = formats.filter((format) => format !== "").map((format) => format.replace("ONE_SHOT", "One shot").replace("MANGA", "Manga").replace("TV", "TV Show").replace("NOVEL", "Novel"));
 
 
 
@@ -121,7 +105,6 @@ export default function NextSeason() {
             // Dodano return
             <div className="hover-data-right">
                 <div className="hover-header">
-
                     <div className="date airing">
                         {(item.status !== "FINISHED") ? (
                             item.startDate?.year === null ? (<>TBA</>) :
@@ -131,13 +114,13 @@ export default function NextSeason() {
                                 ) : (
                                     (item.status === "RELEASING" && item.startDate?.year < 2000) ? (
 
-                                        <>{`Airing Since ${item.startDate?.year}`}
+                                        <>{`Publishing Since ${item.startDate?.year}`}
                                         </>
 
                                     ) : (
                                         <> {item.season
                                             ? `${item.season.charAt(0).toUpperCase()}${item.season.slice(1).toLowerCase()}`
-                                            : ""} {`${item.startDate?.year}`}</>
+                                            : ""} {item.status !== "NOT_YET_RELEASED" ? `Publishing Since ${item.startDate?.year}` : `${item.startDate?.year}`}</>
                                     )
 
 
@@ -148,7 +131,7 @@ export default function NextSeason() {
                             (item.endDate?.year ? // Jeśli anime zakończone i ma więcej niż 100 odcinków
                                 (item.episodes > 100 ? (<>{item.startDate?.year}-{item.endDate?.year}</>) : (<> {item.season
                                     ? `${item.season.charAt(0).toUpperCase()}${item.season.slice(1).toLowerCase()}`
-                                    : ""} {`${item.startDate?.year}`}</>)) : // Jeśli brak informacji o sezonie i startDate
+                                    : ""} {item.startDate?.year}-{item.endDate?.year}</>)) : // Jeśli brak informacji o sezonie i startDate
                                 (<>TBA</>))
                         )}
                     </div>
@@ -166,7 +149,7 @@ export default function NextSeason() {
                 </div>
                 <div className="hover-info">
                     <span>{filteredFormats}</span>
-                    <span className="separator">{item.episodes !== null && "•"}</span>
+                    <span className="separator">{item.episodes !== null && "•"}{(item.status === "FINISHED") && "• " + item.chapters + " chapters"}</span>
                     <span>
                         {item.episodes > 1 && item.episodes + " episodes "}
                         {(item.episodes === 1 && item.format !== "MOVIE") && " episode"}
@@ -187,22 +170,20 @@ export default function NextSeason() {
         );
     };
 
-
-
     return (
         <section className="sMain pokaz">
             <main>
-
-
                 <div className="showAll">
-                    <h2><span>Up</span>coming</h2>
-                    <Link href={"/Browse/upcomingAll"}>{!pathname.includes("/Browse/") && <p>View All</p>}</Link>
+                    <h2><span>Popular </span>Manga</h2>
+                    <Link href={"/Browse/popularManga"}>{!pathname.includes("/Browse/") && <p>View All</p>}</Link>
 
 
 
                 </div>
                 <br />
+
                 <div className="resultsChuj">
+
                     {loading ? (
                         Array.from({ length: 8 }).map((_, index) => (
                             <div key={index} className="media-card" >
@@ -228,15 +209,21 @@ export default function NextSeason() {
                                     }}
                                 >
                                     <motion.div className="media-card" key={item.id}>
-                                        <Link className="resultCover" href={`/anime/${item.id}`}>
+                                        <Link className="resultCover" href={`/manga/${item.id}`}>
                                             <img className="resultImg" src={item.coverImage.extraLarge} alt={item.title.romaji} />
                                         </Link>
 
-                                        <Link href={`/anime/${item.id}`} className="resultTitle">
+                                        <Link href={`/anime/${item.id}`} className="resultTitle min-h-[46px]">
                                             <div className="resultCircle">
                                                 {item.title?.english === null ? item.title?.romaji : item.title?.english}
+
                                             </div>
+
                                         </Link>
+                                        {item.meanScore !== null &&<div className="flex justify-start items-center gap-1">
+                                            <img src="/images/star.svg" className="star" alt="" />
+                                            {item.meanScore !== null && <span className="text-[0.8rem]">{item.meanScore}{item.meanScore !== null && "%"}</span>}
+                                        </div>}
                                     </motion.div>
                                 </Tooltip>
                             )

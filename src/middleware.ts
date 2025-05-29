@@ -8,13 +8,13 @@ export async function middleware(req: NextRequest) {
     if (
         req.nextUrl.pathname.startsWith("/_next") ||
         req.nextUrl.pathname.startsWith("/images") ||
-        req.nextUrl.pathname.startsWith("/favicon.ico") ||
+        req.nextUrl.pathname.startsWith("/favicons") ||
         req.nextUrl.pathname.startsWith("/public") ||
-        req.nextUrl.pathname.startsWith("/api/auth/anilist") ||
-        req.nextUrl.pathname.startsWith("/components")
+        req.nextUrl.pathname.startsWith("/api/auth/anilist")
     ) {
         return NextResponse.next();
     }
+
 
     // Pobieramy ciasteczko access_token i userInfo
     const tokenCookie = req.cookies.get('access_token')?.value;
@@ -64,10 +64,14 @@ export async function middleware(req: NextRequest) {
 
     const isLoginPage = req.nextUrl.pathname.startsWith('/login');
 
+
     // Jeśli użytkownik nie ma tokenu i nie jest na stronie logowania, przekierowujemy go na stronę logowania
     if (!tokenCookie && !isLoginPage) {
         return NextResponse.redirect(new URL('/login', req.url)); // Przekierowanie na stronę logowania
     }
 
+
+
     return NextResponse.next();
 }
+

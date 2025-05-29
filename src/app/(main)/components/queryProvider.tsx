@@ -1,7 +1,7 @@
 'use client'
 import { gql, useQuery } from "@apollo/client";
 import React,{ createContext, useContext } from "react";
-import {useUser} from "@/src/app/components/userInfoWrapper";
+import {useUser} from "@/src/app/(main)/components/userInfoWrapper";
 const GET_DATA = gql`
 query SearchAnime(
   $countryOfOrigin: CountryCode,

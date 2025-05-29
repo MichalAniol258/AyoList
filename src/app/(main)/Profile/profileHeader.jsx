@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { useUser } from "../components/userInfoWrapper"
+import { useUser } from "@/src/app/(main)/components/userInfoWrapper"
 
 
 export default function ProfileHeader() {

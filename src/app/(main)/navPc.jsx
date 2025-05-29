@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useUser } from "../app/components/userInfoWrapper"
+import { useUser } from "@/src/app/(main)/components/userInfoWrapper"
 import { useRef, useState } from "react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { gql, useLazyQuery } from "@apollo/client";

@@ -19,7 +19,7 @@ import {
   ChartTooltipContent,
 
 } from "@/components/ui/chart"
-import { useUser } from "../../components/userInfoWrapper";
+import { useUser } from "@/src/app/(main)/components/userInfoWrapper";
 import { usePathname } from "next/navigation";
 
 import { Area, AreaChart, CartesianGrid } from "recharts"

@@ -3,9 +3,9 @@ import { gql, useMutation } from '@apollo/client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState} from 'react';
-import { useUserContext } from '../../components/userListWrapper'
-import EditComponent from '../../components/EditComponent'
-import { useUser } from "../../components/userInfoWrapper";
+import { useUserContext } from '@/src/app/(main)/components/userListWrapper'
+import EditComponent from '@/src/app/(main)/components/EditComponent'
+import { useUser } from "@/src/app/(main)/components/userInfoWrapper";
 
 
 

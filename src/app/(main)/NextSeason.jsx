@@ -1,21 +1,20 @@
 "use client"
-import {useQueryContext} from "@/src/app/components/queryProvider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import {useQueryContext} from "@/src/app/(main)/components/queryProvider";
 
-
-
-
-
-export default function AnimeSeason() {
-    const {dataSeason, loadingSeason, errorSeason, season, seasonYear} = useQueryContext();
+export default function NextSeason() {
+    const {dataNext, loadingNext, errorNext} = useQueryContext();
     const pathname = usePathname();
-    const data = dataSeason;
-    const loading = loadingSeason;
-    const error = errorSeason;
+    const data = dataNext;
+    const loading = loadingNext;
+    const error = errorNext;
+
+
+
 
 
 
@@ -41,16 +40,15 @@ export default function AnimeSeason() {
     }
 
 
-
     const windowWidth = useWindowWidth();
     const isMobile = windowWidth >= 1024; // Próg dla urządzeń mobilnych, np. 768px
     const limit = isMobile ? 5 : undefined;
 
+    if (error) return <p>Rozjebalo sie cos: {error.message}</p>
 
 
-    if (error) return <p>Something went wrong: {error.message}</p>;
 
-    const media = data?.Page?.media || [];
+    const media = data?.Page?.media;
 
     const svgItems = [
         {
@@ -70,7 +68,6 @@ export default function AnimeSeason() {
         }
     ]
 
-
     const content = (item) => {
         const airingAt = item.nextAiringEpisode?.airingAt;
         const timeUntilAiring = airingAt
@@ -78,9 +75,8 @@ export default function AnimeSeason() {
             : null;
 
         // Convert time into days, hours, and minutes
-
-
         const days = timeUntilAiring ? Math.floor(timeUntilAiring / 86400) : 0;
+
         const remainingSeconds = timeUntilAiring ? timeUntilAiring % 86400 : 0;
 
         const hours = Math.floor(remainingSeconds / 3600); // Liczba godzin
@@ -95,29 +91,37 @@ export default function AnimeSeason() {
         } else if (days === 0 && hours > 0) {
             czas_pozostaly = hours
             tekst_pozostaly = hours === 1 ? 'hour' : 'hours'
-        } else if (hours === 0 && minutes > 0) {
+        } else if (days === 0 && hours === 0 && minutes > 0) {
             czas_pozostaly = minutes
             tekst_pozostaly = minutes === 1 ? 'minute' : 'minutes'
         } else if (days === 0 && hours === 0 && minutes === 0 && seconds > 0) {
             czas_pozostaly = seconds
             tekst_pozostaly = seconds === 1 ? 'second' : 'seconds'
         }
-
         const movie = item.duration;
         const movieHours = Math.floor(movie / 60);
         const remainingMovie = movie % 60;
         const formats = Array.isArray(item.format) ? item.format : [item.format];
-        const filteredFormats = formats.filter((format) => format !== "").map((format) => format.replace("ONE_SHOT", "One shot").replace("MANGA", "Manga").replace("TV", "TV Show").replace("NOVEL", "Novel"));
+        const filteredFormats = formats
+            .filter((format) => format && format !== "") // Remove null, undefined, and empty strings
+            .map((format) =>
+                format
+                    .replace("ONE_SHOT", "One shot")
+                    .replace("MANGA", "Manga")
+                    .replace("TV", "TV Show")
+                    .replace("NOVEL", "Novel")
+            );
+
+
 
 
 
 
         return (
             // Dodano return
-
-
             <div className="hover-data-right">
                 <div className="hover-header">
+
                     <div className="date airing">
                         {(item.status !== "FINISHED") ? (
                             item.startDate?.year === null ? (<>TBA</>) :
@@ -183,26 +187,22 @@ export default function AnimeSeason() {
         );
     };
 
+
+
     return (
-
-        <section className={`sMain`}>
-
+        <section className="sMain pokaz">
             <main>
 
+
                 <div className="showAll">
-                    <h2><span>{season} </span>{seasonYear} Anime</h2>
-                    <Link href={"/Browse/seasonalAll"}>{!pathname.includes("/Browse/") && <p>View All</p>}</Link>
+                    <h2><span>Up</span>coming</h2>
+                    <Link href={"/Browse/upcomingAll"}>{!pathname.includes("/Browse/") && <p>View All</p>}</Link>
 
 
 
                 </div>
-
                 <br />
-
-
-
                 <div className="resultsChuj">
-
                     {loading ? (
                         Array.from({ length: 8 }).map((_, index) => (
                             <div key={index} className="media-card" >
@@ -229,30 +229,21 @@ export default function AnimeSeason() {
                                 >
                                     <motion.div className="media-card" key={item.id}>
                                         <Link className="resultCover" href={`/anime/${item.id}`}>
-                                            <img className="resultImg" src={item.coverImage.extraLarge} alt={item.title?.english === null ? item.title?.romaji : item.title?.english} />
+                                            <img className="resultImg" src={item.coverImage.extraLarge} alt={item.title.romaji} />
                                         </Link>
 
-                                        <Link href={`/anime/${item.id}`} className="resultTitle min-h-[46px]">
+                                        <Link href={`/anime/${item.id}`} className="resultTitle">
                                             <div className="resultCircle">
                                                 {item.title?.english === null ? item.title?.romaji : item.title?.english}
-
                                             </div>
-
                                         </Link>
-                                        {item.meanScore !== null &&<div className="flex justify-start items-center gap-1">
-                                            <img src="/images/star.svg" className="star" alt="" />
-                                            {item.meanScore !== null && <span className="text-[0.8rem]">{item.meanScore}{item.meanScore !== null && "%"}</span>}
-                                        </div>}
                                     </motion.div>
                                 </Tooltip>
                             )
                         })
                     )}
-
-
                 </div>
             </main>
-
-        </section >
+        </section>
     );
 }

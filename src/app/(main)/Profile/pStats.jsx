@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import {useQueryContext} from "@/src/app/components/queryProvider";
+import {useQueryContext} from "@/src/app/(main)/components/queryProvider";
 
 
 import { Bar, BarChart, LabelList, XAxis } from "recharts"

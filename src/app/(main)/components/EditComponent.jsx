@@ -2,8 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from 'framer-motion';
 import { usePathname } from "next/navigation";
-import { useUserContext } from "../components/userListWrapper"
-import { useUser } from "./../components/userInfoWrapper";
+import { useUserContext } from "./userListWrapper"
+import { useUser } from "@/src/app/(main)/components/userInfoWrapper";
 import { gql, useMutation } from "@apollo/client";
 import { Calendar } from "@heroui/react";
 import { parseDate } from '@internationalized/date';

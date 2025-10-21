@@ -19,7 +19,7 @@ interface Statistics {
 }
 
 interface media {
-    coverImage: { extraLarge: string }
+    coverImage: { extraLarge: string, large: string }
     type: string
     genres: string
 }

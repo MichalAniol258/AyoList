@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import {usePathname} from "next/navigation";
 import { useUser } from "@/src/app/(main)/components/userInfoWrapper"
 import { useRef, useState } from "react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
@@ -16,66 +16,49 @@ import {
 } from "@heroui/react";
 
 
-
 const SEARCH_ANIME = gql`
-query SearchAnime($search: String, $isAdult: Boolean, $type: MediaType) {
-  Page {
-    media(search: $search, type: $type, isAdult: $isAdult) {
-      id
-      title {
-        romaji
-        english
-      }
-      coverImage {
-        extraLarge
-      }
-      format
-      startDate {
-        year
-      }
-      characters {
-        nodes {
-          image {
-            large
-          }
-          name {
-            full
-          }
+  query SearchAnime($search: String, $isAdult: Boolean, $type: MediaType) {
+    Page {
+      media(search: $search, type: $type, isAdult: $isAdult) {
+        id
+        title {
+          romaji
+          english
+        }
+        coverImage {
+          medium
+          large
+          extraLarge
+        }
+        format
+        startDate {
+          year
         }
       }
     }
   }
-}
-
-
 `;
 
-
 const SEARCH_CHARACTERS = gql`
-query($search: String) {
-  Page(page: 1, perPage: 10) {
-    characters(search: $search) {
-      id
-      name {
-        full
-        native
+  query SearchCharacters($search: String, $page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+      characters(search: $search) {
+        id
+        name {
+          full
+          first
+          last
+        }
+        image {
+          large
+        }
       }
-      image {
-        large
-      }
-      gender
-      age
-      description
     }
   }
-}
-
-
-
 `;
 
 const navPcItems = [
-  { name: "Home", path: "/" },
+  { name: "Home", path: "/Home" },
   { name: "Profile", path: "/Profile/Overview" },
   { name: "Anime List", path: "/Profile/Animelist" },
   { name: "Manga List", path: "/Profile/Mangalist" },
@@ -96,7 +79,7 @@ export default function NavPc() {
 
 
 
-  let pathname = usePathname() || "/";
+  let pathname = usePathname() || "/Home";
 
   if (pathname.includes("/Profile/") && !pathname.includes("/Profile/Animelist") && !pathname.includes("/Profile/Mangalist")) {
     pathname = "/Profile/Overview"
@@ -227,8 +210,8 @@ export default function NavPc() {
 
   if (!userInfo) return  null;
 
-  const params = new URLSearchParams({search: query, type: "Anime"}).toString();
-  const paramsManga = new URLSearchParams({search: query, type: "Manga"}).toString();
+  const params = new URLSearchParams({search: query, type: "ANIME"}).toString();
+  const paramsManga = new URLSearchParams({search: query, type: "MANGA"}).toString();
 
   return (
       <>
@@ -273,7 +256,8 @@ export default function NavPc() {
             <Link href={"/"} className="logoNavPc"
                   onMouseOver={() => setHovered(true)}
                   onMouseOut={() => setHovered(false)}>
-              <img src={"/images/2.png"} width={50} height={50} className="navPcLogo" alt="cos"/>
+              <Image src={"/images/2.png"}       width={200}
+                     height={65} className="navPcLogo object-contain" alt="cos"/>
             </Link>
 
             <div className="links">
@@ -344,7 +328,7 @@ export default function NavPc() {
                     className="menuAll"
                 >
                   <DropdownTrigger>
-                    <Image rel="preload" src={`${userInfo?.avatar.large}`} className="imageContainer" width={25} height={25} alt="navimgcontainer" unoptimized></Image>
+                    <Image rel="preload" src={`${userInfo?.avatar.large}`} className="imageContainer" width={64} height={64} alt="navimgcontainer" ></Image>
                   </DropdownTrigger>
                   <DropdownMenu
                       aria-label="Custom item styles"
@@ -459,8 +443,12 @@ export default function NavPc() {
 
                         <div key={item.id} className="result2">
                           <div className="podResult2">
-                            <Link href={`${animePath}${item.id}`}>
-                              <img className="results2Img" src={item.coverImage.extraLarge} alt={item.title.romaji} />
+                            <Link href={`${animePath}${item.id}`} onClick={() => setFocus(false)}>
+                              <div className="relative w-[40px] h-[40px]">
+                                <Image  className="results2Img " layout="fill"
+                                        objectFit="cover" src={item.coverImage.extraLarge} alt={item.title.romaji} />
+                              </div>
+
 
 
                               <p className="results2Name">
@@ -528,8 +516,11 @@ export default function NavPc() {
 
                         <div key={item.id} className="result2">
                           <div className="podResult2">
-                            <Link href={`${mangaPath}${item.id}`}>
-                              <img className="results2Img" src={item.coverImage.extraLarge} alt={item.title.romaji} />
+                            <Link href={`${mangaPath}${item.id}`} onClick={() => setFocus(false)}>
+                              <div className={'relative w-[40px] h-[40px]'}>
+                                <Image className="results2Img" objectFit={'cover'} layout={'fill'} src={item.coverImage.extraLarge} alt={item.title.romaji} />
+                              </div>
+
 
 
                               <p className="results2Name">
@@ -597,11 +588,15 @@ export default function NavPc() {
                         <div key={item.id} className="result2">
                           <div className="podResult2">
                             <a href="#">
-                              <img
-                                  className="results2Img"
-                                  src={item.image?.large}
-                                  alt={item.name.full}
-                              />
+                              <div className={'relative w-[40px] h-[40px]'}>
+                                <Image
+                                    objectFit={'cover'} layout={'fill'}
+                                    className="results2Img"
+                                    src={item.image?.large}
+                                    alt={item.name.full}
+                                />
+                              </div>
+
                               <p className="results2Name">{item.name.full}</p>
                             </a>
                           </div>

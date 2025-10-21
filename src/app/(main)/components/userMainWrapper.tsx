@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { useUser } from "./userInfoWrapper";
 import { gql, useQuery } from "@apollo/client";
 
@@ -44,6 +44,7 @@ query Query(
       coverImage {
         medium
         extraLarge
+        large
       }
       nextAiringEpisode {
         episode
@@ -109,7 +110,9 @@ query Query(
             english
           }
           coverImage {
+            medium
             extraLarge
+            large
           }
           startDate {
             year
@@ -124,7 +127,9 @@ query Query(
             english
           }
           coverImage {
+            medium
             extraLarge
+            large
           }
           startDate {
             year
@@ -170,7 +175,6 @@ query Query(
 }
 `;
 
-
 interface UserInfo {
   name: string;
   id: string;
@@ -188,31 +192,50 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-// Wrapper dla kontekstu
 export const UserMainProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-
   const { userInfo } = useUser() as UserHookReturn;
 
+  // KLUCZOWE: Memoizacja variables
+  const queryVariables = useMemo(() => ({
+    name: userInfo?.name,
+    mediaListCollectionType2: "MANGA",
+    userName: userInfo?.name
+  }), [userInfo?.name]);
 
-
-  // Pobranie danych z API GraphQL
+  // GraphQL query z optymalizacją
   const { data: userData, error: userError, loading: userLoading } = useQuery(GET_MEDIA, {
-    variables: {
-      name: userInfo?.name,
-      mediaListCollectionType2: "MANGA",
-      userName: userInfo?.name
-    },
-    skip: !userInfo,
-    fetchPolicy: 'cache-and-network',
+    variables: queryVariables,
+    skip: !userInfo?.name,
+    fetchPolicy: 'cache-first', // Zmienione dla lepszej performance
     nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: false,
+    errorPolicy: 'all',
   });
 
-  if (!userInfo) return null;
+  // KLUCZOWE: Memoizacja context value
+  const contextValue = useMemo(() => ({
+    userData,
+    userError,
+    userLoading
+  }), [userData, userError, userLoading]);
+
+  // Early return z empty context
+  if (!userInfo) {
+    return (
+        <UserContext.Provider value={{
+          userData: null,
+          userError: null,
+          userLoading: false
+        }}>
+          {children}
+        </UserContext.Provider>
+    );
+  }
 
   return (
-    <UserContext.Provider value={{ userData, userError, userLoading }}>
-      {children}
-    </UserContext.Provider>
+      <UserContext.Provider value={contextValue}>
+        {children}
+      </UserContext.Provider>
   );
 };
 
@@ -220,7 +243,7 @@ export const UserMainProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 export const useUserContext = (): UserContextType => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("useUserContext must be used within a UserProvider");
+    throw new Error("useUserMainContext must be used within a UserMainProvider");
   }
   return context;
 };

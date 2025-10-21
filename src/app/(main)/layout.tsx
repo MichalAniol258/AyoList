@@ -11,6 +11,11 @@ import { UserActivityProvider } from "@/src/app/(main)/components/userActivityWr
 import { UserMainProvider } from "@/src/app/(main)/components/userMainWrapper";
 
 import { UserListProvider } from "@/src/app/(main)/components/userListWrapper";
+import Nav from "@/src/app/(main)/nav";
+import NavPc from "@/src/app/(main)/navPc";
+import { memo } from 'react';
+const MemoizedNavPc = memo(NavPc);
+const MemoizedNav = memo(Nav);
 
 
 export default function RootLayout({
@@ -32,7 +37,9 @@ export default function RootLayout({
                           <UserListProvider>
                               <QueryProvider>
                                   <BrowseProvider>
+                                      <MemoizedNavPc />
                                       {children}
+                                      <MemoizedNav />
                                   </BrowseProvider>
                               </QueryProvider>
                           </UserListProvider>

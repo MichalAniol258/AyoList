@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 
 const navItems = [
     {
-        path: "/",
+        path: "/Home",
         name: "Home",
         icon: (isActive) => (
             <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +131,7 @@ c193 -18 353 -54 525 -118 284 -106 534 -266 745 -477 566 -566 752 -1405 477
 
 
 export default function Nav({ }) {
-    let pathname = usePathname() || "/";
+    let pathname = usePathname() || "/Home";
 
     if (pathname.includes("/Profile/") && !pathname.includes("/Profile/Animelist") && !pathname.includes("/Profile/Mangalist")) {
         pathname = "/Profile/Overview";

@@ -2,6 +2,7 @@
 import { gql, useQuery } from "@apollo/client";
 import React,{ createContext, useContext } from "react";
 import {useUser} from "@/src/app/(main)/components/userInfoWrapper";
+import {useMemo} from "react";
 const GET_DATA = gql`
 query SearchAnime(
   $countryOfOrigin: CountryCode,
@@ -34,7 +35,9 @@ query SearchAnime(
         english
       }
       coverImage {
+        medium
         extraLarge
+        large
       }
         nextAiringEpisode {
         episode
@@ -81,6 +84,7 @@ query Query($type: MediaType,$sort: [MediaSort], $startDate: FuzzyDateInt, $epis
       }
       description
       coverImage {
+        medium
         large
         extraLarge
       }
@@ -161,6 +165,7 @@ query Query($type: MediaType,$season: MediaSeason, $seasonYear: Int,$isAdult: Bo
       coverImage {
         medium
         extraLarge
+        large
       }
       nextAiringEpisode {
         episode
@@ -195,6 +200,7 @@ query Query($status: MediaStatus, $sort: [MediaSort], $type: MediaType, $isAdult
         english
       }
       coverImage {
+        medium
         large
         extraLarge
       }
@@ -237,7 +243,9 @@ query Query($userId: Int, $sort: [ActivitySort], $page: Int, $perPage: Int) {
             english
           }
           coverImage {
+            medium
             extraLarge
+            large
           }
           id
         }
@@ -416,7 +424,9 @@ query Query($userId: Int, $type: MediaType) {
         media {
           genres
           coverImage {
+            medium
             extraLarge
+            large
           }
           type
         }
@@ -445,7 +455,7 @@ interface Statistics {
     statistics: { anime: Anime; manga: Manga };
 }
 interface media {
-    coverImage: { extraLarge: string }
+    coverImage: { extraLarge: string, medium: string, large: string }
     genres: string
     type: string
 }
@@ -500,121 +510,214 @@ interface User {
 
 export const QueryProvider = ({children}:{children:React.ReactNode}) => {
     const { userInfo } = useUser();
-    const sortManga = "TRENDING_DESC"
-    const isAdultManga = false
-    const typeManga = "MANGA"
 
-    const sortPopular = "TRENDING_DESC"
-    const isAdultPopular = false
-    const typePopular = "ANIME"
+    // KLUCZOWE: Memoizacja stałych wartości
+    const queryConstants = useMemo(() => {
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
 
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    const isAdultNext = false;
-    const typeNext = "ANIME"
+        let season = '';
+        if (currentMonth >= 12 || currentMonth <= 2) {
+            season = 'WINTER';
+        } else if (currentMonth >= 3 && currentMonth <= 5) {
+            season = 'SPRING';
+        } else if (currentMonth >= 6 && currentMonth <= 8) {
+            season = 'SUMMER';
+        } else if (currentMonth >= 9 && currentMonth <= 11) {
+            season = 'FALL';
+        }
 
+        let seasonNext = '';
+        if (season === "WINTER") {
+            seasonNext = "SPRING";
+        } else if (season === "SPRING") {
+            seasonNext = "SUMMER";
+        } else if (season === "SUMMER") {
+            seasonNext = "FALL";
+        } else if (season === "FALL") {
+            seasonNext = "WINTER";
+        }
 
-    let season = '';
-    const seasonYear = currentYear;
-    if (currentMonth >= 12 || currentMonth <= 2) {
-        season = 'WINTER';
-    } else if (currentMonth >= 3 && currentMonth <= 5) {
-        season = 'SPRING';
-    } else if (currentMonth >= 6 && currentMonth <= 8) {
-        season = 'SUMMER';
-    } else if (currentMonth >= 9 && currentMonth <= 11) {
-        season = 'FALL';
-    }
+        return {
+            season,
+            seasonNext,
+            seasonYear: currentYear,
+            // Stałe wartości
+            sortManga: "TRENDING_DESC",
+            isAdultManga: false,
+            typeManga: "MANGA",
+            sortPopular: "TRENDING_DESC",
+            isAdultPopular: false,
+            typePopular: "ANIME",
+            isAdultNext: false,
+            typeNext: "ANIME",
+            isAdultSeason: false,
+            typeSeason: "ANIME",
+            sortEmission: "TRENDING_DESC",
+            isAdultEmission: false,
+            typeEmission: "ANIME",
+            statusEmission: "RELEASING"
+        };
+    }, []);
 
-    let seasonNext = '';
-    if (season === "WINTER") {
-        seasonNext = "SPRING"
-    } else if (season === "SPRING") {
-        seasonNext = "SUMMER"
-    } else if (season === "SUMMER") {
-        seasonNext = "FALL"
-    }
-
-    const isAdultSeason = false;
-    const typeSeason = "ANIME"
-
-    const sortEmission = "TRENDING_DESC"
-    const isAdultEmission = false
-    const typeEmission = "ANIME"
-    const statusEmission = "RELEASING"
-
-    const { data: dataManga, loading:loadingManga, error:errorManga } = useQuery(GET_DATA, {
-        variables: { sort:sortManga, isAdult:isAdultManga, type:typeManga },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    });
-
-    const { data: dataPopular, loading:loadingPopular, error: errorPopular } = useQuery(GET_DATA_POPULAR, {
-        variables: { sort: sortPopular, isAdult: isAdultPopular, type: typePopular },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    });
-
-    const { data:dataNext, loading:loadingNext, error:errorNext } = useQuery(GET_DATA_NEXTSEASON, {
-        variables: { isAdult:isAdultNext, type:typeNext, season: seasonNext, seasonYear },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    })
-
-    const { data:dataSeason, loading:loadingSeason, error: errorSeason } = useQuery(GET_MEDIA_SEASON, {
-        variables: { season, seasonYear, isAdult:isAdultSeason, type:typeSeason },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    })
-
-    const { data: dataEmission, loading:loadingEmission, error:errorEmission } = useQuery(GET_DATA_EMISSION, {
-        variables: { type:typeEmission, sort:sortEmission, status:statusEmission, isAdult:isAdultEmission },
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
-    });
-
-    const { data: activityData, error: activityError, loading: activityLoading, fetchMore: fetchMoreActivity } = useQuery(GET_ACTIVITY, {
-        variables: {
+    // Memoizacja variables dla user-specific queries
+    const userQueryVariables = useMemo(() => ({
+        activity: {
             page: 1,
             perPage: 20,
             userId: userInfo?.id,
             sort: "ID_DESC"
         },
-        fetchPolicy: 'no-cache',
+        stats: {
+            userId: userInfo?.id,
+            sort: 'PROGRESS_DESC'
+        },
+        media: {
+            userId: userInfo?.id,
+            type: "ANIME"
+        }
+    }), [userInfo?.id]);
+
+    // Manga query
+    const { data: dataManga, loading: loadingManga, error: errorManga } = useQuery(GET_DATA, {
+        variables: {
+            sort: queryConstants.sortManga,
+            isAdult: queryConstants.isAdultManga,
+            type: queryConstants.typeManga
+        },
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'cache-first',
+        notifyOnNetworkStatusChange: false,
+        errorPolicy: 'all',
+    });
+
+    // Popular query
+    const { data: dataPopular, loading: loadingPopular, error: errorPopular } = useQuery(GET_DATA_POPULAR, {
+        variables: {
+            sort: queryConstants.sortPopular,
+            isAdult: queryConstants.isAdultPopular,
+            type: queryConstants.typePopular
+        },
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'cache-first',
+        notifyOnNetworkStatusChange: false,
+        errorPolicy: 'all',
+    });
+
+    // Next season query
+    const { data: dataNext, loading: loadingNext, error: errorNext } = useQuery(GET_DATA_NEXTSEASON, {
+        variables: {
+            isAdult: queryConstants.isAdultNext,
+            type: queryConstants.typeNext,
+            season: queryConstants.seasonNext,
+            seasonYear: queryConstants.seasonYear
+        },
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'cache-first',
+        notifyOnNetworkStatusChange: false,
+        errorPolicy: 'all',
+    });
+
+    // Current season query
+    const { data: dataSeason, loading: loadingSeason, error: errorSeason } = useQuery(GET_MEDIA_SEASON, {
+        variables: {
+            season: queryConstants.season,
+            seasonYear: queryConstants.seasonYear,
+            isAdult: queryConstants.isAdultSeason,
+            type: queryConstants.typeSeason
+        },
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'cache-first',
+        notifyOnNetworkStatusChange: false,
+        errorPolicy: 'all',
+    });
+
+    // Emission query
+    const { data: dataEmission, loading: loadingEmission, error: errorEmission } = useQuery(GET_DATA_EMISSION, {
+        variables: {
+            type: queryConstants.typeEmission,
+            sort: queryConstants.sortEmission,
+            status: queryConstants.statusEmission,
+            isAdult: queryConstants.isAdultEmission
+        },
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'cache-first',
+        notifyOnNetworkStatusChange: false,
+        errorPolicy: 'all',
+    });
+
+    // User-specific queries - skip if no user
+    const { data: activityData, error: activityError, loading: activityLoading, fetchMore: fetchMoreActivity } = useQuery(GET_ACTIVITY, {
+        variables: userQueryVariables.activity,
+        skip: !userInfo?.id,
+        fetchPolicy: 'cache-first', // Zmienione z 'no-cache' dla lepszej performance
+        nextFetchPolicy: 'cache-first',
+        notifyOnNetworkStatusChange: false,
+        errorPolicy: 'all',
     });
 
     const { data: statsData, loading: statsLoading } = useQuery(STATS_LIST, {
-        variables: {
-            userId: userInfo?.id, sort: 'PROGRESS_DESC'
-        }
-    })
+        variables: userQueryVariables.stats,
+        skip: !userInfo?.id,
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'cache-first',
+        notifyOnNetworkStatusChange: false,
+        errorPolicy: 'all',
+    });
 
     const { data: mediaData, loading: mediaLoading } = useQuery(MediaList, {
-        variables: {
-            userId: userInfo?.id, type: "ANIME",
-        }
-    })
+        variables: userQueryVariables.media,
+        skip: !userInfo?.id,
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'cache-first',
+        notifyOnNetworkStatusChange: false,
+        errorPolicy: 'all',
+    });
 
-
-
-
-
-
+    // KLUCZOWE: Memoizacja context value
+    const contextValue = useMemo(() => ({
+        dataManga,
+        loadingManga,
+        errorManga,
+        dataPopular,
+        loadingPopular,
+        errorPopular,
+        dataNext,
+        loadingNext,
+        errorNext,
+        dataSeason,
+        loadingSeason,
+        errorSeason,
+        dataEmission,
+        loadingEmission,
+        errorEmission,
+        activityData,
+        activityError,
+        activityLoading,
+        fetchMoreActivity,
+        statsData,
+        statsLoading,
+        mediaData,
+        mediaLoading,
+        season: queryConstants.season,
+        seasonYear: queryConstants.seasonYear
+    }), [
+        dataManga, loadingManga, errorManga,
+        dataPopular, loadingPopular, errorPopular,
+        dataNext, loadingNext, errorNext,
+        dataSeason, loadingSeason, errorSeason,
+        dataEmission, loadingEmission, errorEmission,
+        activityData, activityError, activityLoading, fetchMoreActivity,
+        statsData, statsLoading, mediaData, mediaLoading,
+        queryConstants.season, queryConstants.seasonYear
+    ]);
 
     return (
-        <QueryContext.Provider value={{dataManga, loadingManga, errorManga,
-            dataPopular, loadingPopular, errorPopular,
-            dataNext, loadingNext, errorNext,
-            dataSeason, loadingSeason, errorSeason,
-            dataEmission, loadingEmission, errorEmission,
-            activityData, activityError, activityLoading, fetchMoreActivity,
-            statsData, statsLoading, mediaData, mediaLoading,
-            season, seasonYear}}>
+        <QueryContext.Provider value={contextValue}>
             {children}
         </QueryContext.Provider>
-    )
-}
-
+    );
+};
 
 export const useQueryContext = (): QueryInterface => {
     const context = useContext(QueryContext);
@@ -622,4 +725,4 @@ export const useQueryContext = (): QueryInterface => {
         throw new Error("useQueryContext must be used within a QueryProvider");
     }
     return context;
-}
+};

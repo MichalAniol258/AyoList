@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 const ANILIST_USERINFO_URL = "https://graphql.anilist.co";
 
 export async function middleware(req: NextRequest) {
-
+    // Skip static files
     if (
         req.nextUrl.pathname.startsWith("/_next") ||
         req.nextUrl.pathname.startsWith("/images") ||
@@ -15,12 +15,11 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     }
 
-
-    // Pobieramy ciasteczko access_token i userInfo
     const tokenCookie = req.cookies.get('access_token')?.value;
     const userInfoCookie = req.cookies.get('userInfo')?.value;
+    const isLoginPage = req.nextUrl.pathname.startsWith('/login');
 
-    // Jeśli brakuje userInfo, próbujemy pobrać dane użytkownika z AniList
+    // Pobierz userInfo jeśli brakuje
     if (tokenCookie && !userInfoCookie) {
         try {
             const res = await fetch(ANILIST_USERINFO_URL, {
@@ -35,9 +34,7 @@ export async function middleware(req: NextRequest) {
                         Viewer {
                           id
                           name
-                          avatar {
-                            large
-                          }
+                          avatar { large }
                           bannerImage
                         }
                       }
@@ -45,29 +42,38 @@ export async function middleware(req: NextRequest) {
                 }),
             });
 
-            if (!res.ok) {
-                throw new Error(`Błąd HTTP: ${res.status}`);
-            }
+            if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
 
             const data = await res.json();
-            const userData = data.data.Viewer;
-
             const response = NextResponse.redirect(req.nextUrl);
-            response.cookies.set('userInfo', JSON.stringify(userData), { httpOnly: false, secure: true, path: '/', });
+
+            // POPRAWKA: path: '/' zamiast '/Home'
+            response.cookies.set('userInfo', JSON.stringify(data.data.Viewer), {
+                httpOnly: false,
+                secure: true,
+                path: '/'
+            });
 
             return response;
         } catch (error) {
             console.error("Błąd pobierania danych użytkownika:", error);
-            return NextResponse.redirect(new URL('/login', req.url)); // Jeśli błąd, przekierowujemy na stronę logowania
+            return NextResponse.redirect(new URL('/login', req.url));
         }
     }
 
-    const isLoginPage = req.nextUrl.pathname.startsWith('/login');
-
-
-    // Jeśli użytkownik nie ma tokenu i nie jest na stronie logowania, przekierowujemy go na stronę logowania
+    // Główna logika przekierowań
     if (!tokenCookie && !isLoginPage) {
-        return NextResponse.redirect(new URL('/login', req.url)); // Przekierowanie na stronę logowania
+        return NextResponse.redirect(new URL('/login', req.url));
+    }
+
+    if (tokenCookie && isLoginPage) {
+        return NextResponse.redirect(new URL('/Home', req.url));
+    }
+
+    if (!tokenCookie && req.nextUrl.pathname === '/') {
+        return NextResponse.redirect(new URL('/login', req.url));
+    } else if (tokenCookie && req.nextUrl.pathname === '/') {
+        return NextResponse.redirect(new URL('/Home', req.url));
     }
 
 

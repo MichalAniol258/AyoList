@@ -1,7 +1,6 @@
 "use client"
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import NavPc from "../../navPc";
-import Nav from "../../nav.jsx"
+
 import MediaPage from "./mediaPage";
 import Link from "next/link";
 import { gql, useQuery } from "@apollo/client";
@@ -130,7 +129,7 @@ interface ScoreDistribution {
 }
 
 interface recommendEdges {
-  node: { mediaRecommendation: { title: { english: string; romaji: string }; coverImage: { extraLarge: string }; id: number } }
+  node: { mediaRecommendation: { title: { english: string; romaji: string }; coverImage: { extraLarge: string, medium: string }; id: number } }
 }
 
 
@@ -459,6 +458,7 @@ query ($mediaId: Int) {
     genres
     countryOfOrigin
     coverImage {
+      medium
       large
       extraLarge
     }
@@ -1085,7 +1085,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
   const monthName = getMonthName(media.startDate?.month);
   return (
     <>
-      <NavPc />
+
       <MediaPage
           mediaId={id}
           mediaLoading={loadingMedia}
@@ -1939,7 +1939,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
         </div >
       </div ></>)}
 
-      <Nav />
+
     </>
   );
 }

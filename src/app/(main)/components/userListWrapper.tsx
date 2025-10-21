@@ -3,6 +3,7 @@ import { createContext, useContext } from "react";
 import { useUser } from "./userInfoWrapper";
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
+import { useMemo } from "react";
 const GET_MEDIA_PROVIDER = gql`
 query ($userId: Int, $type: MediaType, $format: ScoreFormat, $sort: [MediaListSort]) {
   MediaListCollection(userId: $userId, type: $type, sort: $sort) {
@@ -21,7 +22,9 @@ query ($userId: Int, $type: MediaType, $format: ScoreFormat, $sort: [MediaListSo
           bannerImage
           countryOfOrigin
           coverImage {
+            medium
             large
+            extraLarge
           }
           meanScore
           episodes
@@ -91,38 +94,85 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 // Wrapper dla kontekstu
 export const UserListProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-
   const { userInfo } = useUser() as UserHookReturn;
 
-  // Pobranie danych z API GraphQL
-  const { data: userList, error: userErrorList, loading: userLoadingList, refetch } = useQuery(GET_MEDIA_PROVIDER, {
-    variables: { userId: userInfo?.id, type: "ANIME", sort: undefined },
-    skip: !userInfo,
-    fetchPolicy: 'cache-and-network',
+  // KLUCZOWE: Memoizacja variables dla anime query
+  const animeQueryVariables = useMemo(() => ({
+    userId: userInfo?.id,
+    type: "ANIME",
+    sort: undefined
+  }), [userInfo?.id]);
+
+  // KLUCZOWE: Memoizacja variables dla manga query
+  const mangaQueryVariables = useMemo(() => ({
+    userId: userInfo?.id,
+    type: "MANGA",
+    sort: undefined
+  }), [userInfo?.id]);
+
+  // Anime query z optymalizacją
+  const {
+    data: userList,
+    error: userErrorList,
+    loading: userLoadingList,
+    refetch
+  } = useQuery(GET_MEDIA_PROVIDER, {
+    variables: animeQueryVariables,
+    skip: !userInfo?.id,
+    fetchPolicy: 'cache-first', // Zmienione dla lepszej performance
     nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: false,
+    errorPolicy: 'all',
   });
 
+  // Manga query z optymalizacją
   const { data: userListManga } = useQuery(GET_MEDIA_PROVIDER, {
-    variables: { userId: userInfo?.id, type: "MANGA", sort: undefined },
-    skip: !userInfo,
-    fetchPolicy: 'cache-and-network',
+    variables: mangaQueryVariables,
+    skip: !userInfo?.id,
+    fetchPolicy: 'cache-first',
     nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: false,
+    errorPolicy: 'all',
   });
 
-  if (!userInfo) return null;
+  // KLUCZOWE: Memoizacja context value
+  const contextValue = useMemo(() => ({
+    GET_MEDIA_PROVIDER,
+    userListManga,
+    userList,
+    userErrorList,
+    userLoadingList,
+    refetch
+  }), [userListManga, userList, userErrorList, userLoadingList, refetch]);
+
+  // Early return z empty context
+  if (!userInfo) {
+    return (
+        <UserContext.Provider value={{
+          GET_MEDIA_PROVIDER,
+          userListManga: null,
+          userList: null,
+          userErrorList: null,
+          userLoadingList: false,
+          refetch: () => {}
+        }}>
+          {children}
+        </UserContext.Provider>
+    );
+  }
 
   return (
-    <UserContext.Provider value={{ GET_MEDIA_PROVIDER, userListManga, userList, userErrorList, userLoadingList, refetch }}>
-      {children}
-    </UserContext.Provider>
+      <UserContext.Provider value={contextValue}>
+        {children}
+      </UserContext.Provider>
   );
 };
 
-// Hook do używania kontekstu
+// Hook do używania kontekstu - zmieniona nazwa żeby uniknąć konfliktów
 export const useUserContext = (): UserContextType => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("useUserContext must be used within a UserProvider");
+    throw new Error("useUserListContext must be used within a UserListProvider");
   }
   return context;
 };

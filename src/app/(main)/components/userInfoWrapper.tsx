@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import React from 'react';
+import { useMemo } from 'react';
 
 interface User {
     id: number;
@@ -23,6 +24,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [userInfo, setUserInfo] = useState<User | null>(null);
     const [isClient, setIsClient] = useState(false);
 
+    const value = useMemo(() => ({
+        userInfo,
+        setUserInfo
+    }), [userInfo]);
+
     useEffect(() => {
         const cookies = new Cookies();
         const savedUserInfo = cookies.get('userInfo');
@@ -32,8 +38,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (!isClient) return null;
 
+
+
     return (
-        <UserContext.Provider value={{ userInfo, setUserInfo }}>
+        <UserContext.Provider value={value}>
             {children}
         </UserContext.Provider>
     );

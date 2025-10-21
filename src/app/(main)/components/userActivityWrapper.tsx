@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useMemo, useCallback } from "react";
 import { useUser } from "@/src/app/(main)/components/userInfoWrapper";
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
@@ -43,6 +43,7 @@ query Query(
       coverImage {
         medium
         extraLarge
+        large
       }
       nextAiringEpisode {
         episode
@@ -102,7 +103,9 @@ query Query(
             english
           }
           coverImage {
+            medium
             extraLarge
+            large
           }
           startDate {
             year
@@ -118,7 +121,9 @@ query Query(
             english
           }
           coverImage {
+            medium
             extraLarge
+            large
           }
           startDate {
             year
@@ -156,7 +161,7 @@ query Query(
 }
 `;
 
-// Tworzymy interfejsy dla typów danych
+// Interfejsy
 interface UserInfo {
   name: string;
   id: string;
@@ -168,47 +173,78 @@ interface UserHookReturn {
 
 interface UserContextType {
   userActivityInfo: string | null;
-  setUserActivityInfo: React.Dispatch<React.SetStateAction<string | null>>;
-  userData: unknown; // Możesz zamienić na dokładniejszy typ, jeśli chcesz
+  setUserActivityInfo: (info: string | null) => void;
+  userData: unknown;
   userError: unknown;
   userLoading: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-// Wrapper dla kontekstu
 export const UserActivityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [userActivityInfo, setUserActivityInfo] = useState<string | null>(null);
 
-  // Pobranie danych użytkownika z custom hooka `useUserInfo`
+  // Pobranie danych użytkownika
   const { userInfo } = useUser() as UserHookReturn;
 
-  // Pobranie danych z API GraphQL
+  // KLUCZOWE: Memoizacja variables żeby uniknąć niepotrzebnych query
+  const queryVariables = useMemo(() => ({
+    name: userInfo?.name,
+    genresSort2: ["COUNT_DESC"],
+    genresSort3: ["COUNT_DESC"]
+  }), [userInfo?.name]);
+
+  // GraphQL query z optymalizacją
   const { data: userData, error: userError, loading: userLoading } = useQuery(GET_MEDIA, {
-    variables: {
-      name: userInfo?.name,
-      genresSort2: ["COUNT_DESC"],
-      genresSort3: ["COUNT_DESC"]
-    },
-    skip: !userInfo,
-    fetchPolicy: 'cache-and-network',
+    variables: queryVariables,
+    skip: !userInfo?.name, // Bardziej specyficzny warunek
+    fetchPolicy: 'cache-first', // Zmienione z 'cache-and-network' dla lepszej performance
     nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: false, // Unikaj niepotrzebnych re-renderów
+    errorPolicy: 'all', // Nie blokuj UI przy błędach
   });
 
-  if (!userInfo) return null;
+  // Memoizacja callback'a
+  const memoizedSetUserActivityInfo = useCallback((info: string | null) => {
+    setUserActivityInfo(info);
+  }, []);
+
+  // KLUCZOWE: Memoizacja wartości kontekstu
+  const contextValue = useMemo(() => ({
+    userActivityInfo,
+    setUserActivityInfo: memoizedSetUserActivityInfo,
+    userData,
+    userError,
+    userLoading
+  }), [userActivityInfo, memoizedSetUserActivityInfo, userData, userError, userLoading]);
+
+  // Early return jeśli nie ma użytkownika
+  if (!userInfo) {
+    return (
+        <UserContext.Provider value={{
+          userActivityInfo: null,
+          setUserActivityInfo: () => {},
+          userData: null,
+          userError: null,
+          userLoading: false
+        }}>
+          {children}
+        </UserContext.Provider>
+    );
+  }
 
   return (
-    <UserContext.Provider value={{ userActivityInfo, setUserActivityInfo, userData, userError, userLoading }}>
-      {children}
-    </UserContext.Provider>
+      <UserContext.Provider value={contextValue}>
+        {children}
+      </UserContext.Provider>
   );
 };
 
-// Hook do używania kontekstu
+// Hook z lepszym error handling
 export const useUserContext = (): UserContextType => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("useUserContext must be used within a UserProvider");
+    throw new Error("useUserContext must be used within a UserActivityProvider");
   }
   return context;
 };

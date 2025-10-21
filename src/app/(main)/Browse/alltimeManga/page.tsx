@@ -1,7 +1,7 @@
 "use client"
-import Nav from "../../nav.jsx"
-import Header from "../../header.jsx"
-import NavPc from "../../navPc.jsx"
+
+import Header from "../../Home/header.jsx"
+
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
@@ -19,11 +19,11 @@ export default function AlltimeManga() {
         <div className={`${pathname.includes("/Browse") ? "grzegorz" : ""}`}>
 
             <div className={`container ${pathname.includes("/Browse") ? "browseContainer" : ""}`}>
-                <NavPc></NavPc>
+
 
                 <Header handleChangeFocus={handleChangeFocus}></Header>
                 <div className={focus ? "" : ""}></div>
-                <Nav></Nav>
+
             </div>
 
         </div>

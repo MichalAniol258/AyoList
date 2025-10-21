@@ -401,7 +401,7 @@ input[type=number] {
 }
 
 
-.entry:hover .cover img {
+.entry:hover .cover .dejson {
   border-radius: 3px;
   box-shadow: 0 2px 20px rgba(49, 54, 68, .3);
   display: block;
@@ -2247,7 +2247,7 @@ li a {
   padding-right: 20px;
 }
 
-.sMain:nth-last-of-type(2) {
+.sMain:nth-last-of-type(1) {
   margin-bottom: 6rem;
 }
 
@@ -2850,7 +2850,7 @@ body .quickSearch {
   }
 
 
-  .entry:hover .cover img {
+  .entry:hover .cover .dejson {
     display: none;
   }
 
@@ -2871,7 +2871,7 @@ body .quickSearch {
 
   }
 
-  .theme-one .entry:hover .cover img {
+  .theme-one .entry:hover .cover .dejson {
     display: none;
 
   }
@@ -3384,7 +3384,7 @@ input {
 }
 
 .menuDropdown {
-  overflow-y: auto;
+  overflow-y: auto !important;
   max-height: 500px;
 
 

@@ -612,7 +612,7 @@ export default function PAnimeListMain() {
                 repeat: item?.repeat || 0,
                 name: item?.media?.title?.english || item?.media?.title?.romaji || "",
                 banner: item?.media?.bannerImage || "",
-                img: item?.media?.coverImage?.large || "",
+                img: item?.media?.coverImage?.extraLarge || "",
                 favourite: item?.media?.isFavourite || false,
                 startDateYear: item?.startedAt?.year || 0,
                 startDateMonth: item?.startedAt?.month || 0,
@@ -1799,7 +1799,12 @@ l45 -21 1770 0 c1650 0 1772 1 1806 17 54 25 96 64 127 117 23 39 27 57 27
                                                                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="editSvg"><path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"></path></svg>
                                                                 </div>
 
-                                                                <Image src={media.coverImage?.large} width={"50"} height={"50"} alt="cosik" unoptimized />
+                                                                <div className={`dejson min-w-[40px] min-h-[40px] ${hoveredTheme === 3 && 'w-full'} h-full relative`}>
+                                                                    <Image src={media.coverImage?.extraLarge} layout={'fill'} objectFit={'cover'} alt="cosik" />
+                                                                </div>
+
+
+
                                                             </div>
 
 
@@ -1888,7 +1893,9 @@ l45 -21 1770 0 c1650 0 1772 1 1806 17 54 25 96 64 127 117 23 39 27 57 27
                                                                         <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="editSvg"><path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"></path></svg>
                                                                     </div>
 
-                                                                    <Image src={media.coverImage?.large} width={"50"} height={"50"} alt="cosik" unoptimized />
+                                                                    <div className={`dejson min-w-[40px] min-h-[40px] ${hoveredTheme === 3 && 'w-full'} h-full relative`}>
+                                                                        <Image src={media.coverImage?.extraLarge} layout={'fill'} objectFit={'cover'} alt="cosik" />
+                                                                    </div>
                                                                 </div>
 
 
@@ -1979,7 +1986,9 @@ l45 -21 1770 0 c1650 0 1772 1 1806 17 54 25 96 64 127 117 23 39 27 57 27
                                                                         <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="editSvg"><path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"></path></svg>
                                                                     </div>
 
-                                                                    <Image src={media.coverImage?.large} width={"50"} height={"50"} alt="cosik" unoptimized />
+                                                                    <div className={`dejson min-w-[40px] min-h-[40px] ${hoveredTheme === 3 && 'w-full'} h-full relative`}>
+                                                                        <Image src={media.coverImage?.extraLarge} layout={'fill'} objectFit={'cover'} alt="cosik" />
+                                                                    </div>
                                                                 </div>
 
 
@@ -2069,7 +2078,9 @@ l45 -21 1770 0 c1650 0 1772 1 1806 17 54 25 96 64 127 117 23 39 27 57 27
                                                                         <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="editSvg"><path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"></path></svg>
                                                                     </div>
 
-                                                                    <Image src={media.coverImage?.large} width={"50"} height={"50"} alt="cosik" unoptimized />
+                                                                    <div className={`dejson min-w-[40px] min-h-[40px] ${hoveredTheme === 3 && 'w-full'} h-full relative`}>
+                                                                        <Image src={media.coverImage?.extraLarge} layout={'fill'} objectFit={'cover'} alt="cosik" />
+                                                                    </div>
                                                                 </div>
 
 
@@ -2153,7 +2164,9 @@ l45 -21 1770 0 c1650 0 1772 1 1806 17 54 25 96 64 127 117 23 39 27 57 27
                                                                         <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="editSvg"><path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"></path></svg>
                                                                     </div>
 
-                                                                    <Image src={media.coverImage?.large} width={"50"} height={"50"} alt="cosik" unoptimized />
+                                                                    <div className={`dejson min-w-[40px] min-h-[40px] ${hoveredTheme === 3 && 'w-full'} h-full relative`}>
+                                                                        <Image src={media.coverImage?.extraLarge} layout={'fill'} objectFit={'cover'} alt="cosik" />
+                                                                    </div>
                                                                 </div>
 
 
@@ -2239,7 +2252,9 @@ l45 -21 1770 0 c1650 0 1772 1 1806 17 54 25 96 64 127 117 23 39 27 57 27
                                                                         <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="editSvg"><path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"></path></svg>
                                                                     </div>
 
-                                                                    <Image src={media.coverImage?.large} width={"50"} height={"50"} alt="cosik" unoptimized />
+                                                                    <div className={`dejson min-w-[40px] min-h-[40px] ${hoveredTheme === 3 && 'w-full'} h-full relative`}>
+                                                                        <Image src={media.coverImage?.extraLarge} layout={'fill'} objectFit={'cover'} alt="cosik" />
+                                                                    </div>
                                                                 </div>
 
 

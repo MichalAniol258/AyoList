@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useUserContext } from '@/src/app/(main)/components/userListWrapper'
 import EditComponent from '@/src/app/(main)/components/EditComponent'
 import { useUser } from "@/src/app/(main)/components/userInfoWrapper";
-
+import Image from "next/image";
 
 const SAVE_FAVOURITE = gql`
 mutation Mutation($animeId: Int, $mangaId: Int) {
@@ -106,7 +106,7 @@ export default function MediaPage({ mediaId, mediaData, mediaLoading }) {
                 repeat: entry?.repeat ?? 0,
                 name: anime?.title?.english ?? anime?.title?.romaji ?? "",
                 banner: anime?.bannerImage ?? "",
-                img: anime?.coverImage?.large ?? "",
+                img: anime?.coverImage?.extraLarge ?? "",
                 favourite: entry?.media?.isFavourite ?? false,
                 startDateYear: entry?.startedAt?.year ?? 0,
                 startDateMonth: entry?.startedAt?.month ?? 0,
@@ -218,12 +218,16 @@ export default function MediaPage({ mediaId, mediaData, mediaLoading }) {
                                 <div className="cover-wrap-inner" style={{
                                     position: !anime?.bannerImage ? 'static' : ''
                                 }}>
-                                    <img
-                                        className='cover-media'
-                                        src={anime?.coverImage?.large}
+                                    <div className="cover-media">
+                                    <Image
+                                        className=''
+                                        width={20}
+                                        height={20}
+                                        layout="responsive"
+                                        src={anime?.coverImage?.extraLarge}
                                         alt={anime?.title?.english || anime?.title?.romaji}
                                     />
-
+                                    </div>
                                     <div className='actions'>
                                         <div className='list-media'>
                                             <div className='add-media' onClick={() => handleEdit('edit', mediaId)}>{chujec || "Add to List"}</div>

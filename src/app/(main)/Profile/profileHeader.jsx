@@ -52,7 +52,7 @@ export default function ProfileHeader() {
 
           <div className="profile two">
             <div className="profilePhotos">
-              <Image src={userInfo?.avatar?.large} rel="preload" className="profileImage" width={'50'} height={'50'} alt="avatar" unoptimized ></Image>
+              <Image src={userInfo?.avatar?.large} rel="preload" className="profileImage" width={'64'} height={'64'} alt="avatar"></Image>
 
             </div>
             <p>{userInfo?.name}</p>

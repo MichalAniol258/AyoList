@@ -1,0 +1,21 @@
+import { memo } from "react";
+
+const MangaIcon = ({ isActive }: {isActive:boolean}) => (
+    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+         width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
+         preserveAspectRatio="xMidYMid meet" className="svgNav">
+
+        <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+           fill={isActive ? "rgb(20, 184, 166)" : "currentColor"} stroke="currentColor">
+            <path d="M695 5106 c-119 -29 -233 -125 -277 -234 l-23 -57 0 -2255 0 -2255
+23 -57 c67 -165 262 -272 438 -239 88 16 149 48 225 118 34 32 380 363 767
+735 388 373 708 678 712 678 4 0 324 -305 712 -677 850 -818 821 -791 883
+-819 207 -95 465 1 547 204 l23 57 0 2255 0 2255 -23 57 c-29 71 -103 155
+-169 191 -112 60 3 57 -1978 56 -1384 -1 -1822 -4 -1860 -13z m3595 -2518 l0
+-2102 -82 80 c-166 160 -1535 1471 -1590 1523 l-58 54 -57 -54 c-56 -52 -1425
+-1363 -1591 -1523 l-82 -80 0 2102 0 2102 1730 0 1730 0 0 -2102z"/>
+        </g>
+    </svg>
+);
+
+export default memo(MangaIcon);

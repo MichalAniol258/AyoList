@@ -1,7 +1,5 @@
 "use client"
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import NavPc from "../../navPc";
-import Nav from "../../nav.jsx"
 import MediaPage from "./mediaPage";
 import Link from "next/link";
 import { gql, useQuery } from "@apollo/client";
@@ -1082,7 +1080,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
   const monthName = getMonthName(media.startDate?.month);
   return (
     <>
-      <NavPc />
+
       <MediaPage mediaId={id} mediaData={mediaData} mediaLoading={mediaLoading} />
       <div className="contentContainer content-layout">
         <div className="sidebar">
@@ -1932,7 +1930,7 @@ export default function PMangalist({ params: { id }, children }: PMangalistProps
           {children}
         </div >
       </div >
-      <Nav />
+
     </>
   );
 }

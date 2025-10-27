@@ -127,7 +127,7 @@ function HeaderComponent({ handleChangeFocus }) {
 
     useEffect(() => {
         const handleScroll = () => {
-            if ((pathname.includes("/Browse") || pathname.includes("/Home")) && focus ) {
+            if ((pathname.includes("/Browse") || pathname.includes("/Home"))  ) {
                 const scrollTop = window.scrollY || document.documentElement.scrollTop;
                 const scrollHeight = document.documentElement.scrollHeight;
                 const clientHeight = window.innerHeight;

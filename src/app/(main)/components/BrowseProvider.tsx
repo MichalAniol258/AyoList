@@ -227,7 +227,7 @@ export const BrowseProvider = ({children}:{children:React.ReactNode}) => {
         const currentDate = new Date();
         const currentMonth = currentDate.getMonth();
         const currentYear = currentDate.getFullYear();
-        const nextYear = currentYear;
+        let nextYear = currentYear;
 
         let season = "";
         if (currentMonth >= 12 || currentMonth <= 2) {
@@ -238,6 +238,7 @@ export const BrowseProvider = ({children}:{children:React.ReactNode}) => {
             season = 'SUMMER';
         } else if (currentMonth >= 9 && currentMonth <= 11) {
             season = 'FALL';
+            nextYear += 1;
         }
 
         const seasonMapping: Record<string, string> = {
@@ -479,6 +480,8 @@ export const BrowseProvider = ({children}:{children:React.ReactNode}) => {
         fetchMore, handleSetVisible, handleSetSelectedKeys,
         selectedKeys, dateInfo, parsedKeys, isVisible
     ]);
+
+    console.log(nextData)
 
     return (
         <BrowseContext.Provider value={contextValue}>

@@ -515,7 +515,7 @@ export const QueryProvider = ({children}:{children:React.ReactNode}) => {
     const queryConstants = useMemo(() => {
         const currentMonth = new Date().getMonth();
         const currentYear = new Date().getFullYear();
-
+        let nextYear = currentYear;
         let season = '';
         if (currentMonth >= 12 || currentMonth <= 2) {
             season = 'WINTER';
@@ -525,6 +525,7 @@ export const QueryProvider = ({children}:{children:React.ReactNode}) => {
             season = 'SUMMER';
         } else if (currentMonth >= 9 && currentMonth <= 11) {
             season = 'FALL';
+            nextYear = currentYear + 1;
         }
 
         let seasonNext = '';
@@ -542,6 +543,7 @@ export const QueryProvider = ({children}:{children:React.ReactNode}) => {
             season,
             seasonNext,
             seasonYear: currentYear,
+            seasonYearNext: nextYear,
             // Stałe wartości
             sortManga: "TRENDING_DESC",
             isAdultManga: false,
@@ -610,7 +612,7 @@ export const QueryProvider = ({children}:{children:React.ReactNode}) => {
             isAdult: queryConstants.isAdultNext,
             type: queryConstants.typeNext,
             season: queryConstants.seasonNext,
-            seasonYear: queryConstants.seasonYear
+            seasonYear: queryConstants.seasonYearNext
         },
         fetchPolicy: 'cache-first',
         nextFetchPolicy: 'cache-first',
